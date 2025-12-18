@@ -5,18 +5,10 @@ use Livewire\Volt\Volt;
 
 Route::redirect('/', '/login', 301);
 
-// Dashboard with role-based redirect
-Route::get('dashboard', function () {
-    $user = auth()->user();
 
-    // Redirect voter role to /vote
-    if ($user->hasRole('voter')) {
-        return redirect()->route('vote.index');
-    }
 
-    // Super admin and organization go to dashboard
-    return view('dashboard');
-})
+// Dashboard page using Volt
+Volt::route('/dashboard', 'pages.dashboard.dashboard')
     ->middleware(['auth'])
     ->name('dashboard');
 
