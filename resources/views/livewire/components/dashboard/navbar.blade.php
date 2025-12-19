@@ -7,7 +7,7 @@ new class extends Component {
     public function logout(Logout $logout): void
     {
         $logout();
-        $this->redirect('/login', navigate: true);
+        $this->redirect('/', navigate: true);
     }
 }; ?>
 
@@ -35,14 +35,51 @@ new class extends Component {
 
                 </button>
 
-                <!-- Page Title -->
-                <h1 class="ml-4 text-xl font-semibold text-gray-800">
-                    @isset($subtitle)
-                        {{ $subtitle }}
-                    @else
-                        Dashboard
-                    @endisset
-                </h1>
+                <!-- Page Title with Greeting -->
+                <div class="ml-4 flex items-center space-x-3">
+                    @php
+                        $hour = now()->format('H');
+                        $greeting = '';
+                        $icon = '';
+                        $gradientClass = '';
+
+                        if ($hour >= 5 && $hour < 11) {
+                            $greeting = 'Selamat Pagi';
+                            $icon =
+                                '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>';
+                            $gradientClass = 'from-yellow-400 to-orange-400';
+                        } elseif ($hour >= 11 && $hour < 15) {
+                            $greeting = 'Selamat Siang';
+                            $icon =
+                                '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>';
+                            $gradientClass = 'from-orange-400 to-red-400';
+                        } elseif ($hour >= 15 && $hour < 18) {
+                            $greeting = 'Selamat Sore';
+                            $icon =
+                                '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>';
+                            $gradientClass = 'from-orange-500 to-purple-500';
+                        } else {
+                            $greeting = 'Selamat Malam';
+                            $icon =
+                                '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>';
+                            $gradientClass = 'from-indigo-500 to-purple-600';
+                        }
+                    @endphp
+
+                    <div
+                        class="w-10 h-10 rounded-full bg-gradient-to-br {{ $gradientClass }} flex items-center justify-center shadow-lg">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            {!! $icon !!}
+                        </svg>
+                    </div>
+
+                    <div>
+                        <h1 class="text-xl font-semibold text-gray-800">
+                            {{ $greeting }}
+                        </h1>
+                        <p class="text-sm text-gray-500">{{ auth()->user()->name }}</p>
+                    </div>
+                </div>
             </div>
 
             <!-- Right Side -->

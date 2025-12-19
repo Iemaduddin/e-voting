@@ -36,13 +36,23 @@
         <livewire:components.dashboard.navbar :subtitle="$subtitle ?? 'Dashboard'" /> <!-- Page Content -->
         <main class="flex-1 overflow-y-auto bg-gray-100">
             <div class="mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                <!-- Page Heading -->
-                @if (isset($header))
-                    <header class="mb-6">
-                        <div class="bg-white rounded-lg shadow-sm p-6">
-                            {{ $header }}
+                <!-- Page Header -->
+                @if (isset($pageTitle) || isset($pageDescription) || isset($headerAction))
+                    <div class="mb-6 flex justify-between items-center">
+                        <div>
+                            @if (isset($pageTitle))
+                                <h2 class="text-2xl font-bold text-gray-900">{{ $pageTitle }}</h2>
+                            @endif
+                            @if (isset($pageDescription))
+                                <p class="mt-1 text-sm text-gray-600">{{ $pageDescription }}</p>
+                            @endif
                         </div>
-                    </header>
+                        @if (isset($headerAction))
+                            <div>
+                                {{ $headerAction }}
+                            </div>
+                        @endif
+                    </div>
                 @endif
 
                 {{ $slot }}

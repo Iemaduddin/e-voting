@@ -2,10 +2,17 @@
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 
-new #[Layout('layouts.dashboard', ['subtitle' => 'Dashboard'])] class extends Component {};
+new #[
+    Layout('layouts.dashboard', [
+        'subtitle' => 'Dashboard',
+        'pageTitle' => 'Dashboard',
+        'pageDescription' => 'Ringkasan dan statistik sistem e-voting',
+    ]),
+]
+class extends Component {};
 
 ?>
-<div class="p-6">
+<div class="space-y-6">
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
         <!-- Total Elections -->

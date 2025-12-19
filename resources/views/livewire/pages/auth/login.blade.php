@@ -20,9 +20,13 @@ new #[Layout('layouts.guest')] class extends Component {
 
             Session::regenerate();
 
-            notyf()->duration(3000)->position('x', 'right')->position('y', 'top')->addSuccess('Login berhasil! Selamat datang.');
+            notyf()->duration(2000)->position('x', 'right')->position('y', 'top')->addSuccess('Login berhasil! Selamat datang.');
 
-            $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+            // Redirect berdasarkan role
+            $redirectUrl = auth()->user()->hasRole('Voter') ? route('vote.index', absolute: false) : route('dashboard', absolute: false);
+
+            // Dispatch browser event untuk redirect dengan delay
+            $this->dispatch('login-success', url: $redirectUrl);
         } catch (\Illuminate\Validation\ValidationException $e) {
             notyf()->duration(4000)->position('x', 'right')->position('y', 'top')->addError('Login gagal! Periksa kembali email/username dan password Anda.');
 
@@ -31,7 +35,15 @@ new #[Layout('layouts.guest')] class extends Component {
     }
 }; ?>
 
-<div class="w-full">
+<div class="w-full" x-data="{
+    redirectUrl: ''
+}"
+    @login-success.window="
+    redirectUrl = $event.detail.url;
+    setTimeout(() => {
+        Livewire.navigate(redirectUrl);
+    }, 1000);
+">
     <div class="mb-8">
         <h2 class="text-2xl font-bold text-gray-800 mb-2">Selamat Datang Kembali</h2>
         <p class="text-gray-600 text-sm">Silakan masuk ke akun Anda</p>
