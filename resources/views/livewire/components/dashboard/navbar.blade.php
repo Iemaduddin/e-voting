@@ -74,10 +74,10 @@ new class extends Component {
                     </div>
 
                     <div>
-                        <h1 class="text-xl font-semibold text-gray-800">
+                        <h1 class="text-md md:text-xl font-semibold text-gray-800">
                             {{ $greeting }}
                         </h1>
-                        <p class="text-sm text-gray-500">{{ auth()->user()->name }}</p>
+                        <p class="text-xs text-gray-500">{{ auth()->user()->name }}</p>
                     </div>
                 </div>
             </div>

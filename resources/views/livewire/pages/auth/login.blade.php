@@ -20,7 +20,7 @@ new #[Layout('layouts.guest')] class extends Component {
 
             Session::regenerate();
 
-            notyf()->duration(2000)->position('x', 'right')->position('y', 'top')->addSuccess('Login berhasil! Selamat datang.');
+            notyf()->duration(2000)->position('x', 'right')->position('y', 'bottom')->addSuccess('Login berhasil! Selamat datang.');
 
             // Redirect berdasarkan role
             $redirectUrl = auth()->user()->hasRole('Voter') ? route('vote.index', absolute: false) : route('dashboard', absolute: false);
@@ -28,7 +28,7 @@ new #[Layout('layouts.guest')] class extends Component {
             // Dispatch browser event untuk redirect dengan delay
             $this->dispatch('login-success', url: $redirectUrl);
         } catch (\Illuminate\Validation\ValidationException $e) {
-            notyf()->duration(4000)->position('x', 'right')->position('y', 'top')->addError('Login gagal! Periksa kembali email/username dan password Anda.');
+            notyf()->duration(4000)->position('x', 'right')->position('y', 'bottom')->addError('Login gagal! Periksa kembali email/username dan password Anda.');
 
             throw $e;
         }

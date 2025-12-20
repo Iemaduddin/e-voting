@@ -33,10 +33,18 @@
             'group' => 'main',
         ],
         [
-            'name' => 'Organisasi',
-            'route' => '',
+            'name' => 'Jurusan',
+            'route' => 'jurusan.index',
             'icon' =>
                 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4',
+            'roles' => ['Super Admin'],
+            'group' => 'admin',
+        ],
+        [
+            'name' => 'Prodi',
+            'route' => 'prodi.index',
+            'icon' =>
+                'M9 17v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2m14 0h2m-2 0h-4m-6 0H3m2 0h4M7 9h1m-1 4h1m4-4h1m-1 4h1m-5 8v-3a1 1 0 011-1h2a1 1 0 011 1v3m-4 0h4',
             'roles' => ['Super Admin'],
             'group' => 'admin',
         ],
