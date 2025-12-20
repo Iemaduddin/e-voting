@@ -10,4 +10,16 @@ class Prodi extends Model
 {
     /** @use HasFactory<\Database\Factories\ProdiFactory> */
     use HasFactory, HasUuids;
+    protected $fillable = [
+        'kode_prodi',
+        'nama_prodi',
+        'jurusan_id',
+        'created_at',
+        'updated_at',
+    ];
+
+    public function jurusan()
+    {
+        return $this->belongsTo(Jurusan::class);
+    }
 }
