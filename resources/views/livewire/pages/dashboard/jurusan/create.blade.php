@@ -12,7 +12,6 @@ new #[
     ]),
 ]
 class extends Component {
-    use WithFileUploads;
     public $nama = '';
     public $kode_jurusan = '';
 
