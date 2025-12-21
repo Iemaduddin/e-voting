@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->enum('type', ['general', 'organization', 'department'])->default('general');
+            $table->string('pamphlet');
+            $table->string('banner');
             $table->foreignUuid('organization_id')->nullable()->constrained('organizations')->onDelete('cascade');
             $table->foreignUuid('created_by')->constrained('users')->onDelete('cascade');
             $table->dateTime('start_at');

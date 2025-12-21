@@ -17,7 +17,7 @@ new class extends Component {
             <!-- Left Side -->
             <div class="flex items-center">
                 <!-- Menu Button (All Devices) -->
-                <button @click="sidebarOpen = !sidebarOpen"
+                <button @click="toggleSidebar()"
                     class="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none transition duration-150">
                     <svg x-show="sidebarOpen" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                         class="size-6">
@@ -100,7 +100,7 @@ new class extends Component {
                         <button
                             class="flex items-center px-3 py-2 rounded-xl text-sm font-medium text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 focus:outline-none transition-all duration-200 border border-transparent hover:border-blue-200 shadow-sm hover:shadow-md">
                             <div
-                                class="w-9 h-9 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-full flex items-center justify-center mr-2 shadow-md ring-2 ring-white">
+                                class="w-9 h-9 bg-blue-600 rounded-full flex items-center justify-center mr-2 shadow-md ring-2 ring-white">
                                 <span class="text-white font-bold text-sm">
                                     {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                                 </span>
@@ -119,7 +119,7 @@ new class extends Component {
 
                     <x-slot name="content">
                         <!-- User Info Header -->
-                        <div class="px-4 py-4 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-t-lg">
+                        <div class="px-4 py-4 bg-blue-600 rounded-t-lg">
                             <div class="flex items-center space-x-3">
                                 <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg">
                                     <span class="text-blue-600 font-bold text-lg">
@@ -128,9 +128,9 @@ new class extends Component {
                                 </div>
                                 <div class="flex-1 min-w-0">
                                     <p class="text-sm font-semibold text-white truncate">{{ auth()->user()->name }}</p>
-                                    <p class="text-xs text-blue-100 truncate">{{ auth()->user()->email }}</p>
+                                    <p class="text-sm text-white truncate">{{ auth()->user()->email }}</p>
                                     <span
-                                        class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-500 text-white mt-1">
+                                        class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-white text-blue-600 mt-1">
                                         {{ auth()->user()->getRoleNames()->first() ?? 'User' }}
                                     </span>
                                 </div>

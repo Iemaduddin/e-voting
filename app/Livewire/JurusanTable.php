@@ -21,6 +21,7 @@ final class JurusanTable extends PowerGridComponent
     {
 
         return [
+            PowerGrid::responsive(),
             PowerGrid::header()
                 ->showSearchInput(),
             PowerGrid::footer()

@@ -20,6 +20,7 @@ final class UserTable extends PowerGridComponent
     public function setUp(): array
     {
         return [
+            PowerGrid::responsive(),
             PowerGrid::header()
                 ->showSearchInput(),
             PowerGrid::footer()

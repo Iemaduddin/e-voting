@@ -31,10 +31,10 @@ new class extends Component {
         ],
         [
             'name' => 'Kelola Pemilihan',
-            'route' => '',
+            'route' => 'elections.index',
             'icon' =>
                 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2',
-            'roles' => ['Super Admin', 'Organization'],
+            'roles' => ['Organization'],
             'group' => 'main',
         ],
         [
@@ -196,12 +196,12 @@ new class extends Component {
     <!-- Logout Button at Bottom -->
     <div class="absolute bottom-0 w-full border-t border-gray-200">
         <button wire:click="logout"
-            class="w-full flex items-center transition-all duration-200 bg-gradient-to-br from-red-600 via-red-600 to-red-700 hover:from-red-700 hover:via-red-700 hover:to-red-800 shadow-lg hover:shadow-xl"
+            class="w-full flex items-center transition-all duration-200 border-t border-red-600 shadow-lg hover:shadow-xl"
             :class="sidebarOpen ? 'px-4 py-4 justify-start' : 'px-3 py-3 justify-center'"
             :title="!sidebarOpen ? 'Keluar' : ''">
-            <div class="bg-white rounded-full flex items-center justify-center shadow-md"
+            <div class="bg-red-600 rounded-full flex items-center justify-center shadow-md"
                 :class="sidebarOpen ? 'w-10 h-10 mr-3' : 'w-9 h-9'">
-                <svg class="text-red-600" :class="sidebarOpen ? 'w-5 h-5' : 'w-4 h-4'" fill="none"
+                <svg class="text-white" :class="sidebarOpen ? 'w-5 h-5' : 'w-4 h-4'" fill="none"
                     stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
@@ -209,8 +209,8 @@ new class extends Component {
                 </svg>
             </div>
             <div class="flex-1 text-left" x-show="sidebarOpen" x-transition>
-                <p class="text-sm font-semibold text-white">Keluar</p>
-                <p class="text-xs text-red-100">Keluar dari akun Anda</p>
+                <p class="font-semibold text-red-700">Keluar</p>
+                <p class="text-sm text-red-600">Keluar dari akun Anda</p>
             </div>
         </button>
     </div>

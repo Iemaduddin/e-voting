@@ -181,7 +181,7 @@ class extends Component {
                 $logoPath = null;
                 if ($this->logo) {
                     $logoName = uniqid('logo_' . $validated['shorten_name']) . '.' . $this->logo->getClientOriginalExtension();
-                    $logoPath = $this->logo->storeAs('logos', $logoName, 'public');
+                    $logoPath = $this->logo->storeAs('Logo Organization', $logoName, 'public');
                 }
 
                 // Create Organization record
@@ -249,7 +249,7 @@ class extends Component {
 
     <!-- Form Card -->
     <div class="bg-white rounded-lg shadow p-6">
-        <form wire:submit="createUser" class="space-y-6">
+        <form wire:submit="createUser" class="space-y-6" enctype="multipart/form-data">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <!-- Name -->
                 <div>

@@ -2,24 +2,27 @@
 
 namespace App\Livewire;
 
-use App\Models\Prodi;
+use App\Models\Election;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridFields;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
-final class ProdiTable extends PowerGridComponent
+final class ElectionTable extends PowerGridComponent
 {
-    public string $tableName = 'prodiTable';
+    public string $tableName = 'electionTable';
 
     public function setUp(): array
     {
+
         return [
             PowerGrid::responsive(),
             PowerGrid::header()
+                ->showToggleColumns()
                 ->showSearchInput(),
             PowerGrid::footer()
                 ->showPerPage()
@@ -29,47 +32,49 @@ final class ProdiTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Prodi::query();
+        return Election::query();
     }
 
     public function relationSearch(): array
     {
-        return [
-            'jurusan' => [
-                'nama',
-            ],
-        ];
+        return [];
     }
 
     public function fields(): PowerGridFields
     {
         return PowerGrid::fields()
-            ->add('nama_prodi')
-            ->add('kode_prodi')
-            ->add('jurusan_id')
-            ->add('jurusan', function ($prodi) {
-                return $prodi->jurusan->nama ?? '-';
-            })
-            ->add('created_at_formatted', fn($user) => Carbon::parse($user->created_at)->format('d/m/Y H:i'));
+            ->add('name')
+            ->add('pamphlet', fn(Election $model) => $model->pamphlet
+                ? '<img src="' . asset('storage/' . $model->pamphlet) . '" class="w-20 h-20 object-cover rounded-lg" />'
+                : '<span class="text-gray-400">No Image</span>')
+            ->add('banner', fn(Election $model) => $model->banner
+                ? '<img src="' . asset('storage/' . $model->banner) . '" class="w-20 h-20 object-cover rounded-lg" />'
+                : '<span class="text-gray-400">No Image</span>')
+            ->add(
+                'date_range',
+                fn(Election $model) =>
+                Carbon::parse($model->start_at)->locale('id')->translatedFormat('d F Y (H.i)') . ' - ' . Carbon::parse($model->end_at)->locale('id')->translatedFormat('d F Y (H.i)')
+            )
+            ->add('created_at_formatted', fn(Election $model) => Carbon::parse($model->created_at)->locale('id')->translatedFormat('d F Y (H.i)'));
     }
 
     public function columns(): array
     {
         return [
-            Column::make('Nama prodi', 'nama_prodi')
+            Column::make('Nama Pemilihan', 'name')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Kode prodi', 'kode_prodi')
-                ->sortable()
-                ->searchable(),
+            Column::make('Pamflet', 'pamphlet')
+                ->sortable(),
 
+            Column::make('Banner', 'banner')
+                ->sortable(),
 
-            Column::make('Jurusan', 'jurusan', 'jurusan_id')
-                ->sortable()
-                ->searchable(),
+            Column::make('Periode Pemilihan', 'date_range')
+                ->sortable(),
 
-            Column::make('Created at', 'created_at_formatted', 'created_at')
+            Column::make('Dibuat Pada', 'created_at_formatted', 'created_at')
                 ->sortable(),
 
             Column::action('Aksi')
@@ -84,10 +89,10 @@ final class ProdiTable extends PowerGridComponent
     #[\Livewire\Attributes\On('edit')]
     public function edit($rowId): void
     {
-        $this->redirect(route('prodi.edit', ['id' => $rowId]), navigate: true);
+        $this->redirect(route('elections.edit', ['id' => $rowId]), navigate: true);
     }
 
-    public function actions(Prodi $row): array
+    public function actions(Election $row): array
     {
         return [
             Button::add('edit')
@@ -96,13 +101,6 @@ final class ProdiTable extends PowerGridComponent
                 ->class('inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500')
                 ->tooltip('Edit')
                 ->dispatch('edit', ['rowId' => $row->id]),
-
-            Button::add('delete')
-                ->slot('<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>')
-                ->id()
-                ->class('inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500')
-                ->tooltip('Hapus')
-                ->dispatch('confirmDelete', ['rowId' => $row->id, 'prodiName' => $row->nama_prodi])
         ];
     }
 

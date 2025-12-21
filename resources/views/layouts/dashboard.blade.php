@@ -22,7 +22,13 @@
 </head>
 
 <body class="font-sans antialiased">
-<div x-data="{ sidebarOpen: true }" class="min-h-screen bg-gray-100 flex">
+<div x-data="{
+    sidebarOpen: localStorage.getItem('sidebarOpen') === 'false' ? false : true,
+    toggleSidebar() {
+        this.sidebarOpen = !this.sidebarOpen;
+        localStorage.setItem('sidebarOpen', this.sidebarOpen);
+    }
+}" class="min-h-screen bg-gray-100 flex">
     <!-- Sidebar -->
     <livewire:components.dashboard.sidebar />
 

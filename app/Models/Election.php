@@ -13,7 +13,10 @@ class Election extends Model
     protected $fillable = [
         'name',
         'description',
+        'type',
         'organization_id',
+        'pamphlet',
+        'banner',
         'created_by',
         'start_at',
         'end_at',

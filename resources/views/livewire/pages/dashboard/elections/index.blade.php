@@ -4,9 +4,9 @@ use Livewire\Volt\Component;
 
 new #[
     Layout('layouts.dashboard', [
-        'subtitle' => 'Kelola Prodi',
-        'pageTitle' => 'Kelola Prodi',
-        'pageDescription' => 'Daftar semua prodi yang terdaftar dalam sistem',
+        'subtitle' => 'Kelola Pemilihan',
+        'pageTitle' => 'Kelola Pemilihan',
+        'pageDescription' => 'Daftar semua pemilihan yang terdaftar dalam sistem',
     ]),
 ]
 class extends Component {
@@ -14,8 +14,8 @@ class extends Component {
     public $successMessage = '';
     public $notificationKey = 0;
     public $showDeleteModal = false;
-    public $deleteProdiId = null;
-    public $deleteProdiName = '';
+    public $deleteElectionId = null;
+    public $deleteElectionName = '';
 
     public function mount()
     {
@@ -24,13 +24,13 @@ class extends Component {
         if ($successType === 'created') {
             $this->notificationKey++;
             $this->showSuccess = true;
-            $this->successMessage = 'Prodi baru berhasil ditambahkan.';
-            $this->js('window.history.replaceState({}, document.title, "' . route('prodi.index') . '")');
+            $this->successMessage = 'Election baru berhasil ditambahkan.';
+            $this->js('window.history.replaceState({}, document.title, "' . route('elections.index') . '")');
         } elseif ($successType === 'updated') {
             $this->notificationKey++;
             $this->showSuccess = true;
-            $this->successMessage = 'Data prodi berhasil diperbarui.';
-            $this->js('window.history.replaceState({}, document.title, "' . route('prodi.index') . '")');
+            $this->successMessage = 'Data election berhasil diperbarui.';
+            $this->js('window.history.replaceState({}, document.title, "' . route('elections.index') . '")');
         } elseif (session('success')) {
             $this->notificationKey++;
             $this->showSuccess = true;
@@ -39,43 +39,43 @@ class extends Component {
     }
 
     #[\Livewire\Attributes\On('confirmDelete')]
-    public function confirmDelete($rowId, $prodiName)
+    public function confirmDelete($rowId, $electionName)
     {
-        $this->deleteProdiId = $rowId;
-        $this->deleteProdiName = $prodiName;
+        $this->deleteElectionId = $rowId;
+        $this->deleteElectionName = $electionName;
         $this->showDeleteModal = true;
     }
 
-    public function deleteProdi()
+    public function deleteElection()
     {
-        if ($this->deleteProdiId) {
-            \App\Models\Prodi::find($this->deleteProdiId)?->delete();
+        if ($this->deleteElectionId) {
+            \App\Models\Election::find($this->deleteElectionId)?->delete();
             $this->showDeleteModal = false;
-            $this->deleteProdiId = null;
-            $this->deleteProdiName = '';
-            $this->dispatch('pg:eventRefresh-prodiTable');
+            $this->deleteElectionId = null;
+            $this->deleteElectionName = '';
+            $this->dispatch('pg:eventRefresh-electionTable');
             $this->notificationKey++;
             $this->showSuccess = true;
-            $this->successMessage = 'Prodi berhasil dihapus.';
+            $this->successMessage = 'Election berhasil dihapus.';
         }
     }
 
     public function cancelDelete()
     {
         $this->showDeleteModal = false;
-        $this->deleteProdiId = null;
-        $this->deleteProdiName = '';
+        $this->deleteElectionId = null;
+        $this->deleteElectionName = '';
     }
 };
 
 ?>
 <x-slot name="headerAction">
-    <a href="{{ route('prodi.create') }}" wire:navigate
+    <a href="{{ route('elections.create') }}" wire:navigate
         class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
         </svg>
-        Tambah Prodi
+        Tambah Election
     </a>
 </x-slot>
 
@@ -88,12 +88,12 @@ class extends Component {
 
     <!-- Table Card -->
     <div class="bg-white rounded-lg shadow">
-        <livewire:prodi-table />
+        <livewire:election-table />
     </div>
 
     <!-- Delete Confirmation Modal -->
-    <x-confirm-modal :show="$showDeleteModal" title="Hapus Prodi" :message="'Apakah Anda yakin ingin menghapus prodi <strong>' .
-        $deleteProdiName .
+    <x-confirm-modal :show="$showDeleteModal" title="Hapus Election" :message="'Apakah Anda yakin ingin menghapus election <strong>' .
+        $deleteElectionName .
         '</strong>? Data yang sudah dihapus tidak dapat dikembalikan.'" confirmText="Hapus" cancelText="Batal"
-        confirmAction="deleteProdi" cancelAction="cancelDelete" type="danger" />
+        confirmAction="deleteElection" cancelAction="cancelDelete" type="danger" />
 </div>
