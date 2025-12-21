@@ -15,11 +15,12 @@ new #[
 class extends Component {
     use WithFileUploads;
 
-    public Election $election;
+    public $electionId;
+    public $election;
     public $name = '';
     public $description = '';
-    public $pamphlet;
-    public $banner;
+    public $pamphlet = null;
+    public $banner = null;
     public $start_at = '';
     public $end_at = '';
 
@@ -27,21 +28,35 @@ class extends Component {
     public $currentPamphlet = '';
     public $currentBanner = '';
 
+    // For displaying images in component
+    public $pamphletUrl = '';
+    public $bannerUrl = '';
+
     public $showSuccess = false;
     public $successMessage = '';
     public $notificationType = 'success';
     public $notificationKey = 0;
 
-    public function mount(Election $election)
+    public function mount($id)
     {
-        $this->election = $election;
-        $this->name = $election->name;
-        $this->description = $election->description;
+        $this->electionId = $id;
+        // Eager load organization to prevent N+1 query
+        $this->election = Election::with('organization')->findOrFail($id);
+        $this->name = $this->election->name;
+        $this->description = $this->election->description ?? '';
         // Format datetime for datetime-local input (Y-m-d\TH:i)
-        $this->start_at = date('Y-m-d\TH:i', strtotime($election->start_at));
-        $this->end_at = date('Y-m-d\TH:i', strtotime($election->end_at));
-        $this->currentPamphlet = $election->pamphlet;
-        $this->currentBanner = $election->banner;
+        $this->start_at = \Carbon\Carbon::parse($this->election->start_at)->format('Y-m-d\TH:i');
+        $this->end_at = \Carbon\Carbon::parse($this->election->end_at)->format('Y-m-d\TH:i');
+        $this->currentPamphlet = $this->election->pamphlet;
+        $this->currentBanner = $this->election->banner;
+
+        // Set image URLs for display - only generate if exists
+        if ($this->election->pamphlet) {
+            $this->pamphletUrl = asset('storage/' . $this->election->pamphlet);
+        }
+        if ($this->election->banner) {
+            $this->bannerUrl = asset('storage/' . $this->election->banner);
+        }
     }
 
     public function getRules()
@@ -158,7 +173,7 @@ class extends Component {
             <!-- Name -->
             <div>
                 <x-input-label for="name" value="Nama Pemilihan" class="text-gray-700 font-semibold" required />
-                <textarea id="name" wire:model="name" rows="2"
+                <textarea id="name" wire:model.defer="name" rows="2"
                     class="mt-2 w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500" required></textarea>
                 @error('name')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -166,7 +181,7 @@ class extends Component {
             </div>
 
             <!-- Description -->
-            <div>
+            <div wire:ignore>
                 <x-rich-text-editor name="description" label="Deskripsi" wire:model="description"
                     placeholder="Tulis deskripsi di sini..." helperText="Gunakan toolbar untuk memformat teks" />
                 @error('description')
@@ -179,7 +194,7 @@ class extends Component {
                 <div>
                     <x-input-label for="start_at" value="Tanggal Mulai Pemilihan" class="text-gray-700 font-semibold"
                         required />
-                    <x-text-input id="start_at" type="datetime-local" wire:model="start_at" class="mt-2 w-full"
+                    <x-text-input id="start_at" type="datetime-local" wire:model.defer="start_at" class="mt-2 w-full"
                         required autofocus />
                     @error('start_at')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -190,8 +205,8 @@ class extends Component {
                 <div>
                     <x-input-label for="end_at" value="Tanggal Selesai Pemilihan" class="text-gray-700 font-semibold"
                         required />
-                    <x-text-input id="end_at" type="datetime-local" wire:model="end_at" class="mt-2 w-full" required
-                        autofocus />
+                    <x-text-input id="end_at" type="datetime-local" wire:model.defer="end_at" class="mt-2 w-full"
+                        required autofocus />
                     @error('end_at')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -202,7 +217,7 @@ class extends Component {
                     <x-image-upload name="pamphlet" label="Pamflet Pemilihan" wire:model="pamphlet"
                         accept="image/png, image/jpeg, image/jpg" :maxSize="2048"
                         helperText="PNG, JPG atau JPEG (MAX. 2MB) - Kosongkan jika tidak ingin mengubah"
-                        :currentImage="$currentPamphlet ? asset('storage/' . $currentPamphlet) : null">
+                        :currentImage="$pamphletUrl">
                         @error('pamphlet')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -214,7 +229,7 @@ class extends Component {
                     <x-image-upload name="banner" label="Banner Pemilihan" wire:model="banner"
                         accept="image/png, image/jpeg, image/jpg" :maxSize="2048"
                         helperText="PNG, JPG atau JPEG (MAX. 2MB) - Kosongkan jika tidak ingin mengubah"
-                        :currentImage="$currentBanner ? asset('storage/' . $currentBanner) : null">
+                        :currentImage="$bannerUrl">
                         @error('banner')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
