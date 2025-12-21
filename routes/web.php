@@ -29,6 +29,23 @@ Route::middleware(['auth', 'role:Super Admin'])->prefix('prodi')->name('prodi.')
     Volt::route('/{id}/edit', 'pages.dashboard.prodi.edit')->name('edit');
 });
 
+// Organization member management page
+Route::middleware(['auth', 'role:Organization'])->prefix('members')->name('members.')->group(function () {
+    Volt::route('/', 'pages.dashboard.members.index')->name('index');
+    Volt::route('/create', 'pages.dashboard.members.create')->name('create');
+    Volt::route('/{id}/edit', 'pages.dashboard.members.edit')->name('edit');
+});
+
+// Election 
+Route::middleware(['auth', 'role:Organization'])->prefix('elections')->name('elections.')->group(function () {
+    Volt::route('/', 'pages.dashboard.elections.index')->name('index');
+    Volt::route('/create', 'pages.dashboard.elections.create')->name('create');
+    Volt::route('/{id}/edit', 'pages.dashboard.elections.edit')->name('edit');
+    Volt::route('/{id}/candidates', 'pages.dashboard.elections.candidates')->name('candidates');
+});
+
+
+
 // Vote routes for voters
 Route::middleware(['auth'])->prefix('vote')->name('vote.')->group(function () {
     Volt::route('/', 'pages.vote.index')->name('index');

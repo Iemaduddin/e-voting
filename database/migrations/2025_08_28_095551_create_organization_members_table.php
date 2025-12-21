@@ -21,6 +21,7 @@ return new class extends Migration
             $table->enum('level', ['SC', 'OC']);
             $table->string('position', 100);
             $table->boolean('is_leader')->default(false);
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

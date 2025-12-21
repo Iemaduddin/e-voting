@@ -16,9 +16,9 @@ return new class extends Migration
             $table->uuid('id')->primary()->default(Str::uuid());
             $table->foreignUuid('election_id')->constrained('elections')->onDelete('cascade');
             $table->foreignUuid('candidate_id')->constrained('candidates')->onDelete('cascade');
-            $table->foreignUuid('user_id')->constrained('users')->onDelete('cascade');
 
-            $table->unique(['election_id', 'user_id']);
+
+            $table->unique('election_id');
             $table->timestamps();
         });
     }

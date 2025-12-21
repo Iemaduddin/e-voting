@@ -31,6 +31,7 @@ class OrganizationMemberSeeder extends Seeder
                     'username' => 'member_' . strtolower(Str::random(5)) . rand(100, 999),
                     'email' => $faker->unique()->safeEmail,
                     'password' => Hash::make('password'),
+                    'is_active' => $i == 4 ? false : true,
                 ]);
                 OrganizationMember::create([
                     'organization_id' => $organization->id,
@@ -39,7 +40,8 @@ class OrganizationMemberSeeder extends Seeder
                     'name' => $faker->name,
                     'level' => $faker->randomElement(['SC', 'OC']),
                     'position' => $faker->jobTitle,
-                    'is_leader' => $i == 0 ? true : false
+                    'is_leader' => $i == 0 ? true : false,
+                    'is_active' => $i == 4 ? false : true,
                 ]);
             }
         }

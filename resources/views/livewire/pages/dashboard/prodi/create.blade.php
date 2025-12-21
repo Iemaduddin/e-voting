@@ -19,6 +19,7 @@ class extends Component {
     public $showSuccess = false;
     public $successMessage = '';
     public $redirectToIndex = true;
+    public $notificationKey = 0;
 
     public function mount()
     {
@@ -80,6 +81,7 @@ class extends Component {
                 $this->reset(['nama_prodi', 'kode_prodi', 'jurusan_id']);
                 $this->redirectToIndex = true; // Reset to default
 
+                $this->notificationKey++;
                 $this->showSuccess = true;
                 $this->successMessage = 'Prodi baru berhasil ditambahkan.';
             }
@@ -98,8 +100,11 @@ class extends Component {
 ?>
 
 <div class="space-y-6">
-    <x-flash-notification :show="$showSuccess" :message="$successMessage" type="success" />
-
+    @if ($showSuccess)
+        <div wire:key="notification-{{ $notificationKey }}">
+            <x-flash-notification :show="$showSuccess" :message="$successMessage" type="success" />
+        </div>
+    @endif
 
     <!-- Form Card -->
     <div class="bg-white rounded-lg shadow p-6">

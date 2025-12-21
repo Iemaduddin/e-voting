@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('nim', 15)->unique();
             $table->date('tanggal_lahir');
             $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);
+            $table->enum('status', ['Aktif', 'Cuti', 'Lulus', 'Drop Out'])->default('Aktif');
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('prodi_id')->references('id')->on('prodis')->onDelete('cascade');

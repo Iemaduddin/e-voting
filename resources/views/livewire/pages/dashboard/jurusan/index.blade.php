@@ -12,6 +12,7 @@ new #[
 class extends Component {
     public $showSuccess = false;
     public $successMessage = '';
+    public $notificationKey = 0;
     public $showDeleteModal = false;
     public $deleteJurusanId = null;
     public $deleteJurusanName = '';
@@ -21,14 +22,17 @@ class extends Component {
         $successType = request()->query('success');
 
         if ($successType === 'created') {
+            $this->notificationKey++;
             $this->showSuccess = true;
             $this->successMessage = 'Jurusan baru berhasil ditambahkan.';
             $this->js('window.history.replaceState({}, document.title, "' . route('jurusan.index') . '")');
         } elseif ($successType === 'updated') {
+            $this->notificationKey++;
             $this->showSuccess = true;
             $this->successMessage = 'Data jurusan berhasil diperbarui.';
             $this->js('window.history.replaceState({}, document.title, "' . route('jurusan.index') . '")');
         } elseif (session('success')) {
+            $this->notificationKey++;
             $this->showSuccess = true;
             $this->successMessage = session('success');
         }
@@ -50,6 +54,7 @@ class extends Component {
             $this->deleteJurusanId = null;
             $this->deleteJurusanName = '';
             $this->dispatch('pg:eventRefresh-jurusanTable');
+            $this->notificationKey++;
             $this->showSuccess = true;
             $this->successMessage = 'Jurusan berhasil dihapus.';
         }
@@ -75,7 +80,11 @@ class extends Component {
 </x-slot>
 
 <div class="space-y-6">
-    <x-flash-notification :show="$showSuccess" :message="$successMessage" type="success" />
+    @if ($showSuccess)
+        <div wire:key="notification-{{ $notificationKey }}">
+            <x-flash-notification :show="$showSuccess" :message="$successMessage" type="success" />
+        </div>
+    @endif
 
     <!-- Table Card -->
     <div class="bg-white rounded-lg shadow">

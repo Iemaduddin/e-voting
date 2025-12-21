@@ -7,20 +7,27 @@ use Livewire\Volt\Component;
 
 new #[Layout('layouts.guest')] class extends Component {
     public LoginForm $form;
+    public $showNotification = false;
+    public $notificationMessage = '';
+    public $notificationType = 'success';
 
     /**
      * Handle an incoming authentication request.
      */
     public function login(): void
     {
-        $this->validate();
+        // Reset notification sebelumnya
+        $this->showNotification = false;
 
         try {
+            $this->validate();
             $this->form->authenticate();
 
             Session::regenerate();
 
-            notyf()->duration(2000)->position('x', 'right')->position('y', 'bottom')->addSuccess('Login berhasil! Selamat datang.');
+            $this->showNotification = true;
+            $this->notificationMessage = 'Login berhasil! Selamat datang kembali.';
+            $this->notificationType = 'success';
 
             // Redirect berdasarkan role
             $redirectUrl = auth()->user()->hasRole('Voter') ? route('vote.index', absolute: false) : route('dashboard', absolute: false);
@@ -28,9 +35,18 @@ new #[Layout('layouts.guest')] class extends Component {
             // Dispatch browser event untuk redirect dengan delay
             $this->dispatch('login-success', url: $redirectUrl);
         } catch (\Illuminate\Validation\ValidationException $e) {
-            notyf()->duration(4000)->position('x', 'right')->position('y', 'bottom')->addError('Login gagal! Periksa kembali email/username dan password Anda.');
+            $this->showNotification = true;
+            $this->notificationType = 'error';
 
-            throw $e;
+            // Ambil pesan error dari ValidationException
+            $errors = $e->validator->errors();
+            if ($errors->has('form.loginRequest')) {
+                $this->notificationMessage = $errors->first('form.loginRequest');
+            } elseif ($errors->has('form.login')) {
+                $this->notificationMessage = $errors->first('form.login');
+            } else {
+                $this->notificationMessage = 'Login gagal! Periksa kembali email/username dan password Anda.';
+            }
         }
     }
 }; ?>
@@ -44,7 +60,9 @@ new #[Layout('layouts.guest')] class extends Component {
         Livewire.navigate(redirectUrl);
     }, 1000);
 ">
-    <div class="mb-8">
+    <x-flash-notification :show="$showNotification" :message="$notificationMessage" :type="$notificationType" />
+
+    <div class="mb-8 mt-6">
         <h2 class="text-2xl font-bold text-gray-800 mb-2">Selamat Datang Kembali</h2>
         <p class="text-gray-600 text-sm">Silakan masuk ke akun Anda</p>
     </div>
@@ -70,7 +88,7 @@ new #[Layout('layouts.guest')] class extends Component {
         </div>
 
         <!-- Password -->
-        <div>
+        <div x-data="{ showPassword: false }">
             <x-input-label for="password" value="Password" class="text-gray-700 font-semibold" />
             <div class="relative mt-2">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -82,9 +100,27 @@ new #[Layout('layouts.guest')] class extends Component {
                     </svg>
                 </div>
                 <x-text-input wire:model="form.password" id="password"
-                    class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
-                    type="password" name="password" placeholder="Masukkan password" required
+                    class="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+                    ::type="showPassword ? 'text' : 'password'" name="password" placeholder="Masukkan password" required
                     autocomplete="current-password" />
+                <button type="button" @click="showPassword = !showPassword"
+                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition duration-150">
+                    <!-- Eye Icon (show password) -->
+                    <svg x-show="!showPassword" class="w-5 h-5" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+
+                    <!-- Eye Slash Icon (hide password) -->
+                    <svg x-show="showPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        style="display: none;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                    </svg>
+                </button>
             </div>
             <x-input-error :messages="$errors->get('form.password')" class="mt-2" />
         </div>

@@ -19,12 +19,13 @@ class MahasiswaSeeder extends Seeder
         $prodis = Prodi::all();
 
         foreach ($prodis as $prodi) {
-            for ($i = 1; $i <= 5; $i++) {
+            for ($i = 1; $i <= 8; $i++) {
                 $user = User::create([
                     'name' => 'Mahasiswa ' . $i . ' - ' . $prodi->nama_prodi,
                     'username' => 'mahasiswa_' . $i . '_' . $prodi->kode_prodi,
                     'email' => 'mahasiswa' . $i . '_' . Str::slug($prodi->nama_prodi) . '@mail.com',
                     'password' => Hash::make('password'),
+                    'is_active' => $i <= 5 ? true : false,
                 ]);
                 $user->assignRole('Voter');
                 Mahasiswa::create([
@@ -33,6 +34,7 @@ class MahasiswaSeeder extends Seeder
                     'nim' => 'NIM' . rand(100000, 999999),
                     'tanggal_lahir' => now()->subYears(rand(18, 24))->subDays(rand(0, 365)),
                     'jenis_kelamin' => ['Laki-laki', 'Perempuan'][rand(0, 1)],
+                    'status' => $i <= 5 ? 'Aktif' : ($i == 6 ? 'Cuti' : ($i == 7 ? 'Lulus' : 'Drop Out')),
                 ]);
             }
         }

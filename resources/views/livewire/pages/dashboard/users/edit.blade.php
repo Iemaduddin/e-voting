@@ -601,7 +601,7 @@ class extends Component {
                         </svg>
                     </span>
                     <span wire:loading.remove wire:target="updateUser">Update Pengguna</span>
-                    <span wire:loading wire:target="updateUser">Menyimpan...</span>
+                    <span wire:loading wire:target="updateUser">Memperbarui...</span>
                 </button>
             </div>
         </form>

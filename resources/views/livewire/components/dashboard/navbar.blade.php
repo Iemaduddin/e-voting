@@ -95,17 +95,22 @@ new class extends Component {
                 </button>
 
                 <!-- User Dropdown -->
-                <x-dropdown align="right" width="48">
+                <x-dropdown align="right" width="56">
                     <x-slot name="trigger">
                         <button
-                            class="flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 focus:outline-none transition duration-150">
-                            <div class="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center mr-2">
+                            class="flex items-center px-3 py-2 rounded-xl text-sm font-medium text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 focus:outline-none transition-all duration-200 border border-transparent hover:border-blue-200 shadow-sm hover:shadow-md">
+                            <div
+                                class="w-9 h-9 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-full flex items-center justify-center mr-2 shadow-md ring-2 ring-white">
                                 <span class="text-white font-bold text-sm">
                                     {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                                 </span>
                             </div>
-                            <span class="hidden md:block">{{ auth()->user()->name }}</span>
-                            <svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="hidden md:block text-left">
+                                <p class="text-sm font-semibold text-gray-800">{{ auth()->user()->name }}</p>
+                                <p class="text-xs text-gray-500">{{ auth()->user()->getRoleNames()->first() }}</p>
+                            </div>
+                            <svg class="ml-2 h-4 w-4 text-gray-500" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M19 9l-7 7-7-7"></path>
                             </svg>
@@ -113,31 +118,67 @@ new class extends Component {
                     </x-slot>
 
                     <x-slot name="content">
-                        <div class="px-4 py-3 border-b border-gray-100">
-                            <p class="text-sm font-medium text-gray-900">{{ auth()->user()->name }}</p>
-                            <p class="text-xs text-gray-500">{{ auth()->user()->email }}</p>
+                        <!-- User Info Header -->
+                        <div class="px-4 py-4 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-t-lg">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg">
+                                    <span class="text-blue-600 font-bold text-lg">
+                                        {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                                    </span>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-semibold text-white truncate">{{ auth()->user()->name }}</p>
+                                    <p class="text-xs text-blue-100 truncate">{{ auth()->user()->email }}</p>
+                                    <span
+                                        class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-500 text-white mt-1">
+                                        {{ auth()->user()->getRoleNames()->first() ?? 'User' }}
+                                    </span>
+                                </div>
+                            </div>
                         </div>
 
-                        <x-dropdown-link :href="route('profile')" wire:navigate>
-                            <svg class="w-4 h-4 mr-2 inline-block" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                            </svg>
-                            Profil Saya
-                        </x-dropdown-link>
-
-                        <button wire:click="logout" class="w-full text-start">
-                            <x-dropdown-link>
-                                <svg class="w-4 h-4 mr-2 inline-block" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
-                                    </path>
-                                </svg>
-                                Keluar
+                        <!-- Menu Items -->
+                        <div class="py-2">
+                            <x-dropdown-link :href="route('profile')" wire:navigate
+                                class="hover:bg-blue-50 transition-colors duration-150">
+                                <div class="flex items-center">
+                                    <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
+                                        <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
+                                            </path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-800">Profil Saya</p>
+                                        <p class="text-xs text-gray-500">Lihat dan edit profil</p>
+                                    </div>
+                                </div>
                             </x-dropdown-link>
-                        </button>
+
+                            <div class="border-t border-gray-100 my-2"></div>
+
+                            <button wire:click="logout" class="w-full text-start">
+                                <x-dropdown-link class="hover:bg-red-50 transition-colors duration-150">
+                                    <div class="flex items-center">
+                                        <div
+                                            class="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center mr-3">
+                                            <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
+                                                </path>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-medium text-gray-800">Keluar</p>
+                                            <p class="text-xs text-gray-500">Keluar dari akun Anda</p>
+                                        </div>
+                                    </div>
+                                </x-dropdown-link>
+                            </button>
+                        </div>
                     </x-slot>
                 </x-dropdown>
             </div>

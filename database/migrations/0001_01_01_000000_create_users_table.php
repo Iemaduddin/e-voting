@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('village')->nullable();
             $table->text('address')->nullable();
             $table->string('profile_picture')->nullable();
-            $table->boolean('is_active')->default(false);
+            $table->boolean('is_active')->default(true);
             $table->boolean('is_blocked')->default(false);
             $table->string('blocked_reason')->nullable();
             $table->timestamp('email_verified_at')->nullable();

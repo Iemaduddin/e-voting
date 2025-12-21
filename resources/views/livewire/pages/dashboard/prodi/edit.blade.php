@@ -145,7 +145,7 @@ class extends Component {
                         </svg>
                     </span>
                     <span wire:loading.remove wire:target="updateProdi">Update Jurusan</span>
-                    <span wire:loading wire:target="updateProdi">Menyimpan...</span>
+                    <span wire:loading wire:target="updateProdi">Memperbarui...</span>
                 </button>
             </div>
         </form>

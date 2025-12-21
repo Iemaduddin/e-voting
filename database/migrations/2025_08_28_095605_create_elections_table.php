@@ -16,6 +16,7 @@ return new class extends Migration
             $table->uuid('id')->primary()->default(Str::uuid());
             $table->string('name');
             $table->text('description')->nullable();
+            $table->enum('type', ['general', 'organization', 'department'])->default('general');
             $table->foreignUuid('organization_id')->nullable()->constrained('organizations')->onDelete('cascade');
             $table->foreignUuid('created_by')->constrained('users')->onDelete('cascade');
             $table->dateTime('start_at');

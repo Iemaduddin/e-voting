@@ -45,6 +45,30 @@ class LoginForm extends Form
                 'form.loginRequest' => 'Email/Username atau Password yang Anda masukkan salah.',
             ]);
         }
+        $user = Auth::user();
+        if (!$user->is_active) {
+            Auth::logout();
+
+            $statusMhs = optional($user->mahasiswa)->status;
+            $statusOrg = optional($user->organizationMember)->is_active;
+
+            $messages = [
+                'Lulus'    => 'Akses ditolak. Status akademik Anda telah dinyatakan lulus.',
+                'Drop Out' => 'Akses ditolak. Status akademik Anda tercatat sebagai Drop Out.',
+                'Cuti'    => 'Akses ditolak. Saat ini Anda sedang berada dalam status Cuti akademik.',
+            ];
+            if ($statusMhs && isset($messages[$statusMhs])) {
+                $message = $messages[$statusMhs];
+            } elseif ($statusOrg === false) {
+                $message = 'Keanggotaan organisasi Anda tidak aktif. Silakan hubungi administrator.';
+            } else {
+                $message = 'Akun Anda tidak aktif. Silakan hubungi administrator.';
+            }
+
+            throw ValidationException::withMessages([
+                'form.loginRequest' => $message,
+            ]);
+        }
 
         RateLimiter::clear($this->throttleKey());
     }
