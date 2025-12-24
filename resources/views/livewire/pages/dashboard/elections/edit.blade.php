@@ -21,6 +21,7 @@ class extends Component {
     public $description = '';
     public $pamphlet = null;
     public $banner = null;
+    public $status = '';
     public $start_at = '';
     public $end_at = '';
 
@@ -44,6 +45,7 @@ class extends Component {
         $this->election = Election::with('organization')->findOrFail($id);
         $this->name = $this->election->name;
         $this->description = $this->election->description ?? '';
+        $this->status = $this->election->status ?? 'draft';
         // Format datetime for datetime-local input (Y-m-d\TH:i)
         $this->start_at = \Carbon\Carbon::parse($this->election->start_at)->format('Y-m-d\TH:i');
         $this->end_at = \Carbon\Carbon::parse($this->election->end_at)->format('Y-m-d\TH:i');
@@ -66,6 +68,7 @@ class extends Component {
             'description' => 'nullable|string',
             'start_at' => 'required|date',
             'end_at' => 'required|date|after:start_at',
+            'status' => 'required|in:draft,published,archived',
         ];
 
         // Only validate images if new files are uploaded
@@ -91,6 +94,8 @@ class extends Component {
             'banner.image' => 'Banner harus berupa gambar',
             'banner.mimes' => 'Banner harus berupa file gambar dengan format jpeg, png, atau jpg',
             'banner.max' => 'Ukuran banner maksimal 2MB',
+            'status.required' => 'Status pemilihan wajib diisi',
+            'status.in' => 'Status pemilihan tidak valid',
             'start_at.required' => 'Tanggal mulai wajib diisi',
             'end_at.required' => 'Tanggal selesai wajib diisi',
             'end_at.after' => 'Tanggal selesai harus setelah tanggal mulai',
@@ -119,6 +124,7 @@ class extends Component {
                 'description' => $this->description,
                 'start_at' => $this->start_at,
                 'end_at' => $this->end_at,
+                'status' => $this->status,
             ];
 
             // Handle pamphlet upload
@@ -235,6 +241,25 @@ class extends Component {
                         @enderror
                     </x-image-upload>
                 </div>
+            </div>
+
+            <!-- Status -->
+            <div>
+                <x-input-label for="status" value="Status Publikasi" class="text-gray-700 font-semibold" required />
+                <select id="status" wire:model.defer="status"
+                    class="mt-2 w-full border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md shadow-sm">
+                    <option value="draft">Draft (Tidak tampil di halaman voter)</option>
+                    <option value="published">Published (Tampil di halaman voter)</option>
+                    <option value="archived">Archived (Disembunyikan, sudah selesai)</option>
+                </select>
+                <p class="mt-1 text-sm text-gray-500">
+                    <span class="font-semibold">Draft:</span> Pemilihan tidak akan terlihat oleh voter. <br>
+                    <span class="font-semibold">Published:</span> Pemilihan aktif dan terlihat oleh voter. <br>
+                    <span class="font-semibold">Archived:</span> Pemilihan sudah selesai dan disembunyikan.
+                </p>
+                @error('status')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
             </div>
 
             <!-- Submit Button -->

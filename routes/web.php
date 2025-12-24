@@ -40,8 +40,15 @@ Route::middleware(['auth', 'role:Organization'])->prefix('members')->name('membe
 Route::middleware(['auth', 'role:Organization'])->prefix('elections')->name('elections.')->group(function () {
     Volt::route('/', 'pages.dashboard.elections.index')->name('index');
     Volt::route('/create', 'pages.dashboard.elections.create')->name('create');
+    Volt::route('/{id}', 'pages.dashboard.elections.detail')->name('detail');
     Volt::route('/{id}/edit', 'pages.dashboard.elections.edit')->name('edit');
     Volt::route('/{id}/candidates', 'pages.dashboard.elections.candidates')->name('candidates');
+});
+
+// Candidate management page
+Route::middleware(['auth', 'role:Organization'])->prefix('candidates')->name('candidates.')->group(function () {
+    Volt::route('/{electionId}/create', 'pages.dashboard.candidates.create')->name('create');
+    Volt::route('/{id}/edit', 'pages.dashboard.candidates.edit')->name('edit');
 });
 
 

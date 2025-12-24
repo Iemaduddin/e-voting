@@ -23,6 +23,7 @@ return new class extends Migration
             $table->foreignUuid('created_by')->constrained('users')->onDelete('cascade');
             $table->dateTime('start_at');
             $table->dateTime('end_at');
+            $table->enum('status', ['draft', 'published', 'archived'])->default('draft');
             $table->timestamps();
         });
     }

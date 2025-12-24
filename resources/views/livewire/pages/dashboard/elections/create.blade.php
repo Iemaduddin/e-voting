@@ -120,6 +120,7 @@ class extends Component {
                 'start_at' => $this->start_at,
                 'end_at' => $this->end_at,
                 'created_by' => $userId,
+                'status' => 'draft',
             ]);
 
             if ($this->redirectToIndex) {
