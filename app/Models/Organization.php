@@ -32,4 +32,9 @@ class Organization extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function elections()
+    {
+        return $this->hasMany(Election::class);
+    }
 }

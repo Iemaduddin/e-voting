@@ -19,8 +19,8 @@ return new class extends Migration
             $table->foreignUuid('wakil_id')->nullable()->constrained('users')->onDelete('cascade');
             $table->text('visi');
             $table->text('misi');
-            $table->string('cv')->nullable();
-            $table->string('photo');
+            $table->text('cv');
+            $table->text('photo');
             $table->string('link')->nullable();
             $table->timestamps();
         });

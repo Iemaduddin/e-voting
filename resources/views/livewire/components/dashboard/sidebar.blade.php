@@ -196,7 +196,7 @@ new class extends Component {
     <!-- Logout Button at Bottom -->
     <div class="absolute bottom-0 w-full border-t border-gray-200">
         <button wire:click="logout"
-            class="w-full flex items-center transition-all duration-200 border-t border-red-600 shadow-lg hover:shadow-xl"
+            class="w-full flex items-center transition-all duration-200 shadow-lg hover:shadow-xl"
             :class="sidebarOpen ? 'px-4 py-4 justify-start' : 'px-3 py-3 justify-center'"
             :title="!sidebarOpen ? 'Keluar' : ''">
             <div class="bg-red-600 rounded-full flex items-center justify-center shadow-md"

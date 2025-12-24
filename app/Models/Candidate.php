@@ -21,6 +21,12 @@ class Candidate extends Model
         'link',
     ];
 
+    protected $casts = [
+        'cv' => 'array',
+        'photo' => 'array',
+        'misi' => 'array',
+    ];
+
     public function election()
     {
         return $this->belongsTo(Election::class);

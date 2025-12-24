@@ -17,6 +17,7 @@ class Election extends Model
         'organization_id',
         'pamphlet',
         'banner',
+        'status',
         'created_by',
         'start_at',
         'end_at',
@@ -61,5 +62,25 @@ class Election extends Model
     public function hasNotStarted()
     {
         return now()->isBefore($this->start_at);
+    }
+
+    public function isPublished()
+    {
+        return $this->status === 'published';
+    }
+
+    public function isDraft()
+    {
+        return $this->status === 'draft';
+    }
+
+    public function isArchived()
+    {
+        return $this->status === 'archived';
+    }
+
+    public function isVisibleToVoters()
+    {
+        return $this->status === 'published';
     }
 }

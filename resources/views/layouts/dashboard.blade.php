@@ -19,6 +19,7 @@
 <!-- Scripts -->
 @vite(['resources/css/app.css', 'resources/js/app.js'])
 @flasher_render
+@livewireStyles
 </head>
 
 <body class="font-sans antialiased">
@@ -69,6 +70,8 @@
         <livewire:components.dashboard.footer />
     </div>
 </div>
+
+@livewireScripts
 </body>
 
 </html>
