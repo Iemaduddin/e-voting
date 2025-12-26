@@ -265,7 +265,7 @@ class extends Component {
                                 </path>
                             </svg>
                         </span>
-                        <span wire:loading.remove wire:target="createElection">Tambah Anggota</span>
+                        <span wire:loading.remove wire:target="createElection">Tambah Pemilihan</span>
                         <span wire:loading wire:target="createElection">Menyimpan...</span>
                     </button>
                 </div>

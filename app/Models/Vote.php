@@ -13,7 +13,7 @@ class Vote extends Model
     protected $fillable = [
         'election_id',
         'candidate_id',
-        'user_id',
+        'mahasiswa_id',
     ];
 
     public function election()
@@ -24,5 +24,10 @@ class Vote extends Model
     public function candidate()
     {
         return $this->belongsTo(Candidate::class);
+    }
+
+    public function mahasiswa()
+    {
+        return $this->belongsTo(Mahasiswa::class);
     }
 }

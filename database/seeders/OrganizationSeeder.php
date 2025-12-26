@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Jurusan;
 use App\Models\Organization;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -105,19 +106,30 @@ class OrganizationSeeder extends Seeder
         ]];
 
 
-        foreach ($organizations as  $organizer) {
-            foreach ($organizer as $type => $org) {
+        foreach ($organizations as  $organization) {
+            foreach ($organization as $type => $org) {
                 foreach ($org as $content) {
-
-                    $user = User::create(
-                        [
-                            'name' => $content["name"],
-                            'username' => $content["username_email"],
-                            'email' => $content["username_email"] . '.evoting@polinema.ac.id',
-                            'password' => Hash::make('password'),
-                        ]
-                    );
-
+                    if ($type === 'HMJ' || $type === 'Jurusan') {
+                        $jurusan_id = Jurusan::where('kode_jurusan', $content["jurusan"])->value('id');
+                        $user = User::create(
+                            [
+                                'name' => $content["name"],
+                                'username' => $content["username_email"],
+                                'email' => $content["username_email"] . '.evoting@arobidsh.id',
+                                'password' => Hash::make('password'),
+                                'jurusan_id' => $jurusan_id,
+                            ]
+                        );
+                    } else {
+                        $user = User::create(
+                            [
+                                'name' => $content["name"],
+                                'username' => $content["username_email"],
+                                'email' => $content["username_email"] . '.evoting@arobidsh.id',
+                                'password' => Hash::make('password')
+                            ]
+                        );
+                    }
                     Organization::create([
                         'shorten_name' => $content["shorten_name"],
                         'vision' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae sunt, eligendi accusantium quidem.',
@@ -126,7 +138,7 @@ class OrganizationSeeder extends Seeder
                         'whatsapp_number' => '082344444444',
                         'user_id' => $user->id,
                         'organization_type' => $type,
-                        'logo' => $type === 'Kampus' ? 'assets/images/logo_polinema.png' : 'assets/images/logo_organizations/' . $content["logo"] . '.png',
+                        'logo' => $type === 'Kampus' ? 'assets/images/logo_polinema.png' : 'assets/images/logo_organizers/' . $content["logo"] . '.png',
                     ]);
                     $user->assignRole('Organization');
                 }

@@ -26,6 +26,7 @@ class MahasiswaSeeder extends Seeder
                     'email' => 'mahasiswa' . $i . '_' . Str::slug($prodi->nama_prodi) . '@mail.com',
                     'password' => Hash::make('password'),
                     'is_active' => $i <= 5 ? true : false,
+                    'jurusan_id' => $prodi->jurusan_id,
                 ]);
                 $user->assignRole('Voter');
                 Mahasiswa::create([

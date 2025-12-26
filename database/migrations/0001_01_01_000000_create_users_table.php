@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('email', 100)->unique();
             $table->string('password');
             $table->string('phone_number')->nullable();
+            $table->uuid('jurusan_id')->nullable();
             $table->string('province')->nullable();
             $table->string('city')->nullable();
             $table->string('subdistrict')->nullable();
@@ -31,6 +32,8 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('remember_token')->nullable();
             $table->timestamps();
+
+            $table->foreign('jurusan_id')->references('id')->on('jurusans')->onDelete('cascade');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

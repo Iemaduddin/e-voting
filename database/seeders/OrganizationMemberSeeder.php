@@ -25,7 +25,7 @@ class OrganizationMemberSeeder extends Seeder
         $organizations = Organization::all();
         foreach ($organizations as $organization) {
 
-            for ($i = 0; $i < 5; $i++) {
+            for ($i = 0; $i < 20; $i++) {
                 $user = User::create([
                     'name' => $faker->name,
                     'username' => 'member_' . strtolower(Str::random(5)) . rand(100, 999),

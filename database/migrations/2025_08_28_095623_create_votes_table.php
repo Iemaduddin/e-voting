@@ -16,9 +16,10 @@ return new class extends Migration
             $table->uuid('id')->primary()->default(Str::uuid());
             $table->foreignUuid('election_id')->constrained('elections')->onDelete('cascade');
             $table->foreignUuid('candidate_id')->constrained('candidates')->onDelete('cascade');
+            $table->foreignUuid('mahasiswa_id')->constrained('mahasiswas')->onDelete('cascade');
 
-
-            $table->unique('election_id');
+            // Satu mahasiswa hanya bisa vote sekali per election
+            $table->unique(['election_id', 'mahasiswa_id']);
             $table->timestamps();
         });
     }

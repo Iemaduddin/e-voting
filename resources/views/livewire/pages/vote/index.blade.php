@@ -10,35 +10,106 @@ new #[Layout('layouts.vote', ['subtitle' => 'Pemilihan'])] class extends Compone
     public $activeElections = [];
     public $upcomingElections = [];
     public $pastElections = [];
+    public $showElection = false;
 
     public function mount()
     {
         $user = Auth::user();
 
-        // Get active elections
-        $this->activeElections = Election::with(['candidates.ketua', 'candidates.wakil', 'organization'])
-            ->where('start_at', '<=', now())
+        // Cek apakah user punya role 'voter' dan aktif
+        if (!$user->hasRole('Voter') || !$user->is_active) {
+            $this->activeElections = collect([]);
+            $this->upcomingElections = collect([]);
+            $this->pastElections = collect([]);
+            return;
+        }
+
+        $mahasiswa = $user->mahasiswa;
+        $userJurusanId = $user->jurusan_id;
+
+        // Get active elections with filter
+        $this->activeElections = Election::where('start_at', '<=', now())
             ->where('end_at', '>=', now())
+            ->where('status', 'published')
+            ->with(['candidates.ketua', 'candidates.wakil', 'organization.user', 'organization.members'])
             ->get()
-            ->map(function ($election) use ($user) {
-                $election->user_has_voted = Vote::where('election_id', $election->id)->where('user_id', $user->id)->exists();
-                return $election;
+            ->filter(function ($election) use ($user, $userJurusanId) {
+                $orgType = $election->organization->organization_type;
+
+                // LT: Semua user dengan role 'Voter' yang aktif
+                if ($orgType === 'LT') {
+                    return true;
+                }
+
+                // HMJ: Cek jurusan_id dari organization creator dengan user login
+                if ($orgType === 'HMJ') {
+                    $orgJurusanId = $election->organization->user->jurusan_id;
+                    return $orgJurusanId && $orgJurusanId === $userJurusanId;
+                }
+
+                // UKM: Hanya user yang ada di organization_members dengan organization_id yang sama
+                if ($orgType === 'UKM') {
+                    return $election->organization->members->where('user_id', $user->id)->isNotEmpty();
+                }
+
+                return false;
             });
 
-        // Get upcoming elections
-        $this->upcomingElections = Election::with(['candidates.ketua', 'candidates.wakil', 'organization'])
-            ->where('start_at', '>', now())
+        // Get upcoming elections with filter
+        $this->upcomingElections = Election::where('start_at', '>', now())
+            ->where('status', 'published')
             ->orderBy('start_at', 'asc')
-            ->get();
+            ->with(['candidates.ketua', 'candidates.wakil', 'organization.user', 'organization.members'])
+            ->get()
+            ->filter(function ($election) use ($user, $userJurusanId) {
+                $orgType = $election->organization->organization_type;
+
+                if ($orgType === 'LT') {
+                    return true;
+                }
+
+                if ($orgType === 'HMJ') {
+                    $orgJurusanId = $election->organization->user->jurusan_id;
+                    return $orgJurusanId && $orgJurusanId === $userJurusanId;
+                }
+
+                if ($orgType === 'UKM') {
+                    return $election->organization->members->where('user_id', $user->id)->isNotEmpty();
+                }
+
+                return false;
+            });
 
         // Get past elections with user's vote
-        $this->pastElections = Election::with(['candidates.ketua', 'candidates.wakil', 'organization'])
-            ->where('end_at', '<', now())
+        $this->pastElections = Election::where('end_at', '<', now())
             ->orderBy('end_at', 'desc')
+            ->with(['candidates.ketua', 'candidates.wakil', 'organization.user', 'organization.members'])
             ->get()
-            ->map(function ($election) use ($user) {
-                $userVote = Vote::where('election_id', $election->id)->where('user_id', $user->id)->with('candidate.ketua', 'candidate.wakil')->first();
-                $election->user_vote = $userVote;
+            ->filter(function ($election) use ($user, $userJurusanId) {
+                $orgType = $election->organization->organization_type;
+
+                if ($orgType === 'LT') {
+                    return true;
+                }
+
+                if ($orgType === 'HMJ') {
+                    $orgJurusanId = $election->organization->user->jurusan_id;
+                    return $orgJurusanId && $orgJurusanId === $userJurusanId;
+                }
+
+                if ($orgType === 'UKM') {
+                    return $election->organization->members->where('user_id', $user->id)->isNotEmpty();
+                }
+
+                return false;
+            })
+            ->map(function ($election) use ($mahasiswa) {
+                // Only load user vote if user is mahasiswa
+                if ($mahasiswa) {
+                    $userVote = Vote::where('election_id', $election->id)->where('mahasiswa_id', $mahasiswa->id)->with('candidate.ketua', 'candidate.wakil')->first();
+
+                    $election->user_vote = $userVote;
+                }
                 return $election;
             });
     }
@@ -46,7 +117,7 @@ new #[Layout('layouts.vote', ['subtitle' => 'Pemilihan'])] class extends Compone
 
 <div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
     <!-- Hero Section -->
-    <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+    <div class="bg-blue-600 text-white rounded-b-3xl shadow-lg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
             <div class="text-center">
                 <div class="flex justify-center mb-6">
@@ -98,6 +169,26 @@ new #[Layout('layouts.vote', ['subtitle' => 'Pemilihan'])] class extends Compone
                                 </div>
                             </div>
                             <div class="p-6">
+                                <div class="flex items-center gap-2 mb-2">
+                                    @php
+                                        $orgType = $election->organization->organization_type;
+                                        $badgeColor =
+                                            $orgType === 'LT'
+                                                ? 'bg-blue-100 text-blue-700'
+                                                : ($orgType === 'HMJ'
+                                                    ? 'bg-purple-100 text-purple-700'
+                                                    : 'bg-amber-100 text-amber-700');
+                                        $badgeText =
+                                            $orgType === 'LT'
+                                                ? 'Lembaga Tinggi'
+                                                : ($orgType === 'HMJ'
+                                                    ? 'Himpunan Jurusan'
+                                                    : 'Unit Kegiatan');
+                                    @endphp
+                                    <span class="{{ $badgeColor }} text-xs font-semibold px-2 py-1 rounded">
+                                        {{ $badgeText }}
+                                    </span>
+                                </div>
                                 <h3 class="text-xl font-bold text-gray-800 mb-2">{{ $election->name }}</h3>
                                 @if ($election->organization)
                                     <p class="text-sm text-gray-500 mb-3">{{ $election->organization->name }}</p>
@@ -170,6 +261,26 @@ new #[Layout('layouts.vote', ['subtitle' => 'Pemilihan'])] class extends Compone
                                 </span>
                             </div>
                             <div class="p-6">
+                                <div class="flex items-center gap-2 mb-2">
+                                    @php
+                                        $orgType = $election->organization->organization_type;
+                                        $badgeColor =
+                                            $orgType === 'LT'
+                                                ? 'bg-blue-100 text-blue-700'
+                                                : ($orgType === 'HMJ'
+                                                    ? 'bg-purple-100 text-purple-700'
+                                                    : 'bg-amber-100 text-amber-700');
+                                        $badgeText =
+                                            $orgType === 'LT'
+                                                ? 'Lembaga Tinggi'
+                                                : ($orgType === 'HMJ'
+                                                    ? 'Himpunan Jurusan'
+                                                    : 'Unit Kegiatan');
+                                    @endphp
+                                    <span class="{{ $badgeColor }} text-xs font-semibold px-2 py-1 rounded">
+                                        {{ $badgeText }}
+                                    </span>
+                                </div>
                                 <h3 class="text-xl font-bold text-gray-800 mb-2">{{ $election->name }}</h3>
                                 @if ($election->organization)
                                     <p class="text-sm text-gray-500 mb-3">{{ $election->organization->name }}</p>
@@ -224,6 +335,26 @@ new #[Layout('layouts.vote', ['subtitle' => 'Pemilihan'])] class extends Compone
                                 </span>
                             </div>
                             <div class="p-6">
+                                <div class="flex items-center gap-2 mb-2">
+                                    @php
+                                        $orgType = $election->organization->organization_type;
+                                        $badgeColor =
+                                            $orgType === 'LT'
+                                                ? 'bg-blue-100 text-blue-700'
+                                                : ($orgType === 'HMJ'
+                                                    ? 'bg-purple-100 text-purple-700'
+                                                    : 'bg-amber-100 text-amber-700');
+                                        $badgeText =
+                                            $orgType === 'LT'
+                                                ? 'Lembaga Tinggi'
+                                                : ($orgType === 'HMJ'
+                                                    ? 'Himpunan Jurusan'
+                                                    : 'Unit Kegiatan');
+                                    @endphp
+                                    <span class="{{ $badgeColor }} text-xs font-semibold px-2 py-1 rounded">
+                                        {{ $badgeText }}
+                                    </span>
+                                </div>
                                 <h3 class="text-xl font-bold text-gray-800 mb-2">{{ $election->name }}</h3>
                                 @if ($election->organization)
                                     <p class="text-sm text-gray-500 mb-3">{{ $election->organization->name }}</p>

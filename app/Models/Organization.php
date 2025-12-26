@@ -37,4 +37,9 @@ class Organization extends Model
     {
         return $this->hasMany(Election::class);
     }
+
+    public function members()
+    {
+        return $this->hasMany(OrganizationMember::class);
+    }
 }

@@ -21,7 +21,7 @@
 <body class="font-sans text-gray-900 antialiased">
     <div class="min-h-screen flex bg-gray-50">
         <!-- Left Side - Branding -->
-        <div class="hidden lg:flex lg:w-1/2 bg-blue-600 relative overflow-hidden">
+        <div class="hidden lg:flex lg:w-1/2 bg-blue-600 relative rounded-r-3xl overflow-hidden">
             <div class="absolute inset-0 bg-black opacity-10"></div>
             <div class="relative z-10 flex flex-col justify-center items-center w-full px-12 text-white">
                 <img src="{{ asset('assets/image/id_logo.png') }}" alt="Logo"
