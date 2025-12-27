@@ -53,6 +53,15 @@ new #[Layout('layouts.vote', ['subtitle' => 'Pemilihan'])] class extends Compone
                 }
 
                 return false;
+            })
+            ->map(function ($election) use ($mahasiswa) {
+                // Check if user has voted
+                if ($mahasiswa) {
+                    $election->user_has_voted = Vote::where('election_id', $election->id)->where('mahasiswa_id', $mahasiswa->id)->exists();
+                } else {
+                    $election->user_has_voted = false;
+                }
+                return $election;
             });
 
         // Get upcoming elections with filter
@@ -117,8 +126,15 @@ new #[Layout('layouts.vote', ['subtitle' => 'Pemilihan'])] class extends Compone
 
 <div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
     <!-- Hero Section -->
-    <div class="bg-blue-600 text-white rounded-b-3xl shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="relative bg-blue-600 text-white rounded-b-3xl shadow-lg overflow-hidden">
+        <!-- Background Image -->
+        <div class="absolute inset-0 w-full h-full">
+            <img src="https://picsum.photos/seed/picsum/1920/400" alt="Background"
+                class="w-full h-full object-cover opacity-20">
+        </div>
+
+        <!-- Content -->
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
             <div class="text-center">
                 <div class="flex justify-center mb-6">
                     <img src="{{ asset('assets/image/id_logo.png') }}" alt="Logo"
@@ -155,19 +171,16 @@ new #[Layout('layouts.vote', ['subtitle' => 'Pemilihan'])] class extends Compone
                     @foreach ($activeElections as $election)
                         <div
                             class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition duration-300 transform hover:-translate-y-1">
-                            <div class="bg-gradient-to-r from-green-500 to-emerald-500 p-4">
-                                <div class="flex items-center justify-between">
-                                    <span class="bg-white text-green-600 text-xs font-semibold px-3 py-1 rounded-full">
-                                        🔴 LIVE
-                                    </span>
-                                    @if ($election->user_has_voted)
-                                        <span
-                                            class="bg-green-700 text-white text-xs font-semibold px-3 py-1 rounded-full">
-                                            ✓ Sudah Memilih
-                                        </span>
-                                    @endif
+                            <!-- Pamflet Image -->
+                            @if ($election->pamphlet)
+                                <div class="w-full h-48 bg-gray-100">
+                                    <img src="{{ asset('storage/' . $election->pamphlet) }}" alt="{{ $election->name }}"
+                                        class="w-full h-full object-cover">
                                 </div>
-                            </div>
+                            @else
+                                <div class="w-full h-48 bg-gradient-to-r from-green-500 to-emerald-500"></div>
+                            @endif
+
                             <div class="p-6">
                                 <div class="flex items-center gap-2 mb-2">
                                     @php
@@ -188,12 +201,17 @@ new #[Layout('layouts.vote', ['subtitle' => 'Pemilihan'])] class extends Compone
                                     <span class="{{ $badgeColor }} text-xs font-semibold px-2 py-1 rounded">
                                         {{ $badgeText }}
                                     </span>
+                                    @if ($election->user_has_voted)
+                                        <span
+                                            class="bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded">
+                                            ✓ Sudah Memilih
+                                        </span>
+                                    @endif
                                 </div>
                                 <h3 class="text-xl font-bold text-gray-800 mb-2">{{ $election->name }}</h3>
                                 @if ($election->organization)
                                     <p class="text-sm text-gray-500 mb-3">{{ $election->organization->name }}</p>
                                 @endif
-                                <p class="text-gray-600 text-sm mb-4 line-clamp-3">{{ $election->description }}</p>
 
                                 <div class="space-y-2 mb-4">
                                     <div class="flex items-center text-sm text-gray-600">
@@ -218,7 +236,7 @@ new #[Layout('layouts.vote', ['subtitle' => 'Pemilihan'])] class extends Compone
                                 @if ($election->user_has_voted)
                                     <button disabled
                                         class="w-full bg-gray-300 text-gray-600 font-semibold py-3 px-4 rounded-lg cursor-not-allowed">
-                                        Anda Sudah Memilih
+                                        Sudah Memilih
                                     </button>
                                 @else
                                     <a href="{{ route('vote.show', $election->id) }}" wire:navigate
@@ -255,11 +273,16 @@ new #[Layout('layouts.vote', ['subtitle' => 'Pemilihan'])] class extends Compone
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach ($upcomingElections as $election)
                         <div class="bg-white rounded-xl shadow-lg overflow-hidden border-2 border-blue-100">
-                            <div class="bg-gradient-to-r from-blue-500 to-indigo-500 p-4">
-                                <span class="bg-white text-blue-600 text-xs font-semibold px-3 py-1 rounded-full">
-                                    Akan Datang
-                                </span>
-                            </div>
+                            <!-- Pamflet Image -->
+                            @if ($election->pamphlet)
+                                <div class="w-full h-48 bg-gray-100">
+                                    <img src="{{ asset('storage/' . $election->pamphlet) }}"
+                                        alt="{{ $election->name }}" class="w-full h-full object-cover">
+                                </div>
+                            @else
+                                <div class="w-full h-48 bg-gradient-to-r from-blue-500 to-indigo-500"></div>
+                            @endif
+
                             <div class="p-6">
                                 <div class="flex items-center gap-2 mb-2">
                                     @php
@@ -280,12 +303,14 @@ new #[Layout('layouts.vote', ['subtitle' => 'Pemilihan'])] class extends Compone
                                     <span class="{{ $badgeColor }} text-xs font-semibold px-2 py-1 rounded">
                                         {{ $badgeText }}
                                     </span>
+                                    <span class="bg-blue-100 text-blue-700 text-xs font-semibold px-2 py-1 rounded">
+                                        Akan Datang
+                                    </span>
                                 </div>
                                 <h3 class="text-xl font-bold text-gray-800 mb-2">{{ $election->name }}</h3>
                                 @if ($election->organization)
                                     <p class="text-sm text-gray-500 mb-3">{{ $election->organization->name }}</p>
                                 @endif
-                                <p class="text-gray-600 text-sm mb-4 line-clamp-3">{{ $election->description }}</p>
 
                                 <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
                                     <p class="text-sm font-semibold text-blue-800 mb-1">Dimulai pada:</p>
@@ -314,7 +339,8 @@ new #[Layout('layouts.vote', ['subtitle' => 'Pemilihan'])] class extends Compone
                 <div class="flex items-center mb-6">
                     <div class="flex-shrink-0">
                         <div class="h-12 w-12 bg-gray-500 rounded-full flex items-center justify-center">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
@@ -329,11 +355,16 @@ new #[Layout('layouts.vote', ['subtitle' => 'Pemilihan'])] class extends Compone
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach ($pastElections as $election)
                         <div class="bg-white rounded-xl shadow-lg overflow-hidden opacity-90">
-                            <div class="bg-gray-500 p-4">
-                                <span class="bg-white text-gray-600 text-xs font-semibold px-3 py-1 rounded-full">
-                                    Selesai
-                                </span>
-                            </div>
+                            <!-- Pamflet Image -->
+                            @if ($election->pamphlet)
+                                <div class="w-full h-48 bg-gray-100">
+                                    <img src="{{ asset('storage/' . $election->pamphlet) }}"
+                                        alt="{{ $election->name }}" class="w-full h-full object-cover">
+                                </div>
+                            @else
+                                <div class="w-full h-48 bg-gray-500"></div>
+                            @endif
+
                             <div class="p-6">
                                 <div class="flex items-center gap-2 mb-2">
                                     @php
@@ -353,6 +384,9 @@ new #[Layout('layouts.vote', ['subtitle' => 'Pemilihan'])] class extends Compone
                                     @endphp
                                     <span class="{{ $badgeColor }} text-xs font-semibold px-2 py-1 rounded">
                                         {{ $badgeText }}
+                                    </span>
+                                    <span class="bg-gray-100 text-gray-600 text-xs font-semibold px-2 py-1 rounded">
+                                        Selesai
                                     </span>
                                 </div>
                                 <h3 class="text-xl font-bold text-gray-800 mb-2">{{ $election->name }}</h3>

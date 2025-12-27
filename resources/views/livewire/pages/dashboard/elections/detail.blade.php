@@ -17,7 +17,7 @@ class extends Component {
     public function mount($id)
     {
         $this->electionId = $id;
-        $this->election = Election::with(['organization', 'candidates.ketua', 'candidates.wakil'])->findOrFail($id);
+        $this->election = Election::with(['organization', 'candidates.ketua', 'candidates.wakil', 'candidates.votes'])->findOrFail($id);
     }
 };
 ?>
