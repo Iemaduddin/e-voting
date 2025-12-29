@@ -22,27 +22,27 @@
 @livewireStyles
 </head>
 
-<body class="font-sans antialiased">
+<body class="font-sans antialiased overflow-x-hidden">
 <div x-data="{
     sidebarOpen: localStorage.getItem('sidebarOpen') === 'false' ? false : true,
     toggleSidebar() {
         this.sidebarOpen = !this.sidebarOpen;
         localStorage.setItem('sidebarOpen', this.sidebarOpen);
     }
-}" class="min-h-screen bg-gray-100 flex">
+}" class="min-h-screen bg-gray-100 flex overflow-x-hidden">
     <!-- Sidebar -->
     <livewire:components.dashboard.sidebar />
 
     <!-- Main Content -->
-    <div class="flex-1 flex flex-col min-h-screen transition-all duration-300"
+    <div class="flex-1 flex flex-col min-h-screen transition-all duration-300 overflow-x-hidden"
         :class="{
             'md:ml-20': !sidebarOpen,
             'md:ml-72': sidebarOpen
         }">
         <!-- Top Navbar -->
         <livewire:components.dashboard.navbar :subtitle="$subtitle ?? 'Dashboard'" /> <!-- Page Content -->
-        <main class="flex-1 overflow-y-auto bg-gray-100">
-            <div class="mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <main class="flex-1 overflow-y-auto overflow-x-hidden bg-gray-100">
+            <div class="mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-full">
                 <!-- Page Header -->
                 @if (isset($pageTitle) || isset($pageDescription) || isset($headerAction))
                     <div class="mb-6 flex justify-between items-center">
