@@ -43,7 +43,7 @@ final class ElectionTable extends PowerGridComponent
     public function fields(): PowerGridFields
     {
         return PowerGrid::fields()
-            ->add('name')
+            ->add('name', fn(Election $model) => '<div class="max-w-xs truncate" title="' . e($model->name) . '">' . e($model->name) . '</div>')
             ->add('pamphlet', fn(Election $model) => $model->pamphlet
                 ? '<img src="' . asset('storage/' . $model->pamphlet) . '" class="w-20 h-20 object-cover rounded-lg" />'
                 : '<span class="text-gray-400">No Image</span>')
