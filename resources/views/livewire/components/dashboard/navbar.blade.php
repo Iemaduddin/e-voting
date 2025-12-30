@@ -77,7 +77,7 @@ new class extends Component {
 
                         <!-- Text -->
                         <div class="min-w-0 flex-1">
-                            <p class="text-xs md:text-sm text-gray-500 font-medium">{{ $greeting }}</p>
+                            <p class="text-xs md:text-sm text-gray-500 font-medium"> Selamat {{ $greeting }}</p>
                             <h1 class="text-sm md:text-base font-semibold text-gray-900 truncate"
                                 title="{{ auth()->user()->name }}">
                                 {{ auth()->user()->name }}

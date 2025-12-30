@@ -48,6 +48,11 @@ class Election extends Model
         return $this->hasMany(Vote::class);
     }
 
+    public function extendedLogs()
+    {
+        return $this->hasMany(ElectionExtendedLog::class)->orderBy('created_at', 'desc');
+    }
+
     public function isActive()
     {
         $now = now();

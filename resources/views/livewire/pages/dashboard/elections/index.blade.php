@@ -92,6 +92,9 @@ class extends Component {
         <livewire:election-table />
     </div>
 
+    <!-- Extend Election Modal -->
+    <livewire:extend-election />
+
     <!-- Delete Confirmation Modal -->
     <x-confirm-modal :show="$showDeleteModal" title="Hapus Election" :message="'Apakah Anda yakin ingin menghapus election <strong>' .
         $deleteElectionName .

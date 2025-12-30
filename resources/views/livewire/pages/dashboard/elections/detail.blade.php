@@ -98,6 +98,15 @@ class extends Component {
                     </svg>
                 </x-slot>
             </x-tab-button>
+
+            <x-tab-button name="riwayat" label="Riwayat Perpanjangan">
+                <x-slot name="icon">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </x-slot>
+            </x-tab-button>
         </x-slot>
 
         <!-- Preview Tab Content -->
@@ -113,6 +122,11 @@ class extends Component {
         <!-- Hasil Tab Content -->
         <x-tab-content name="hasil">
             @include('livewire.pages.dashboard.elections.partials.hasil-tab')
+        </x-tab-content>
+
+        <!-- Riwayat Perpanjangan Tab Content -->
+        <x-tab-content name="riwayat">
+            @include('livewire.pages.dashboard.elections.partials.riwayat-tab')
         </x-tab-content>
     </x-tabs>
 

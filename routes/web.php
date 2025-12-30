@@ -6,7 +6,7 @@ use Livewire\Volt\Volt;
 
 // Dashboard page using Volt
 Volt::route('/dashboard', 'pages.dashboard.dashboard')
-    ->middleware(['auth', 'role:Super Admin,Organization'])
+    ->middleware(['auth', 'role:Super Admin|Organization'])
     ->name('dashboard');
 
 
