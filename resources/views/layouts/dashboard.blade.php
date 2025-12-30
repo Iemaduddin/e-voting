@@ -39,7 +39,7 @@
     <div class="flex-1 flex flex-col min-h-screen transition-all duration-300 overflow-x-hidden"
         :class="{
             'md:ml-20': !sidebarOpen,
-            'md:ml-72': sidebarOpen
+            'md:ml-64': sidebarOpen
         }">
         <!-- Top Navbar -->
         <livewire:components.dashboard.navbar :subtitle="$subtitle ?? 'Dashboard'" /> <!-- Page Content -->

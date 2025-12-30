@@ -175,9 +175,9 @@ class extends Component {
                         $totalVotes = $election->votes()->count();
                         $orgType = $election->organization->organization_type;
                         if ($orgType === 'LT') {
-                            $eligibleVoters = \App\Models\User::role('Voter')->where('is_active', true)->count();
+                            $eligibleVoters = User::role('Voter')->where('is_active', true)->count();
                         } elseif ($orgType === 'HMJ') {
-                            $eligibleVoters = \App\Models\User::role('Voter')
+                            $eligibleVoters = User::role('Voter')
                                 ->where('is_active', true)
                                 ->where('jurusan_id', $election->organization->user->jurusan_id)
                                 ->count();
@@ -399,50 +399,6 @@ class extends Component {
                     @endforeach
                 </div>
             </div>
-        @endif
-    </div>
-
-    <!-- Quick Actions -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        @if ($isOrganization)
-            <a href="{{ route('elections.create') }}" wire:navigate
-                class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition duration-300 group">
-                <div class="flex items-center mb-4">
-                    <div class="bg-indigo-100 p-3 rounded-full mr-4 group-hover:bg-indigo-200 transition-colors">
-                        <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                        </svg>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-900">Buat Pemilihan Baru</h3>
-                </div>
-                <p class="text-gray-600 text-sm mb-4">Mulai pemilihan baru dengan kandidat dan jadwal yang
-                    ditentukan.</p>
-                <span class="text-indigo-600 group-hover:text-indigo-800 font-medium text-sm">
-                    Buat Sekarang →
-                </span>
-            </a>
-
-            <a href="{{ route('elections.index') }}" wire:navigate
-                class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition duration-300 group">
-                <div class="flex items-center mb-4">
-                    <div class="bg-purple-100 p-3 rounded-full mr-4 group-hover:bg-purple-200 transition-colors">
-                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
-                            </path>
-                        </svg>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-900">Kelola Pemilihan</h3>
-                </div>
-                <p class="text-gray-600 text-sm mb-4">Monitor hasil pemilihan dan statistik suara secara real-time.
-                </p>
-                <span class="text-purple-600 group-hover:text-purple-800 font-medium text-sm">
-                    Lihat Detail →
-                </span>
-            </a>
         @endif
     </div>
 </div>

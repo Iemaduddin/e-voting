@@ -5,7 +5,8 @@
 <div x-data="{ activeTab: '{{ $active }}' }" class="w-full" x-cloak>
     <!-- Tab Navigation -->
     <div class="bg-white rounded-t-lg shadow-sm border-b border-gray-200">
-        <nav class="flex space-x-2 px-6" aria-label="Tabs">
+        <nav class="flex space-x-2 sm:space-x-4 px-2 sm:px-6 overflow-x-auto whitespace-nowrap scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
+            aria-label="Tabs" style="scrollbar-width: thin;">
             {{ $navigation ?? '' }}
         </nav>
     </div>
