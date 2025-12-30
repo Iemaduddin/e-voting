@@ -156,7 +156,7 @@ class extends Component {
     }
 };
 ?>
-<div class="space-y-6">
+<div class="space-y-4 sm:space-y-6">
     @if ($showSuccess)
         <div wire:key="notification-{{ $notificationKey }}">
             <x-flash-notification :show="$showSuccess" :message="$successMessage" :type="$notificationType" />
@@ -164,13 +164,14 @@ class extends Component {
     @endif
 
     <!-- Form Card -->
-    <div class="bg-white rounded-lg shadow p-6">
-        <form wire:submit="createElection" class="space-y-6" enctype="multipart/form-data">
+    <div class="bg-white rounded-lg shadow p-4 sm:p-6">
+        <form wire:submit="createElection" class="space-y-4 sm:space-y-6" enctype="multipart/form-data">
             <!-- Name -->
             <div>
                 <x-input-label for="name" value="Nama Pemilihan" class="text-gray-700 font-semibold" required />
                 <textarea id="name" wire:model="name" rows="2"
-                    class="mt-2 w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500" required></textarea>
+                    class="mt-1 sm:mt-2 w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm sm:text-base"
+                    required></textarea>
                 @error('name')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
@@ -184,12 +185,12 @@ class extends Component {
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                 <!-- Start at -->
                 <div>
                     <x-input-label for="start_at" value="Tanggal Mulai Pemilihan" class="text-gray-700 font-semibold"
                         required />
-                    <x-text-input id="start_at" type="datetime-local" wire:model="start_at" class="mt-2 w-full"
+                    <x-text-input id="start_at" type="datetime-local" wire:model="start_at" class="mt-1 sm:mt-2 w-full"
                         required autofocus />
                     @error('start_at')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -199,8 +200,8 @@ class extends Component {
                 <div>
                     <x-input-label for="end_at" value="Tanggal Selesai Pemilihan" class="text-gray-700 font-semibold"
                         required />
-                    <x-text-input id="end_at" type="datetime-local" wire:model="end_at" class="mt-2 w-full" required
-                        autofocus />
+                    <x-text-input id="end_at" type="datetime-local" wire:model="end_at" class="mt-1 sm:mt-2 w-full"
+                        required autofocus />
                     @error('end_at')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -231,15 +232,15 @@ class extends Component {
 
 
             <!-- Submit Button -->
-            <div class="flex items-center justify-between gap-3 pt-6 border-t">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-4 sm:pt-6 border-t">
                 <a href="{{ route('elections.index') }}" wire:navigate
-                    class="inline-flex items-center px-4 py-2 bg-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 transition duration-150">
+                    class="inline-flex items-center justify-center px-4 py-2 bg-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 transition duration-150 order-3 sm:order-1">
                     Kembali
                 </a>
-                <div class="flex gap-3">
+                <div class="flex flex-col sm:flex-row gap-3 order-1 sm:order-2">
                     <button type="button" wire:click="createAndStay" wire:loading.attr="disabled"
                         wire:target="createAndStay,createElection"
-                        class="inline-flex items-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-150 disabled:opacity-50 disabled:cursor-not-allowed">
+                        class="inline-flex items-center justify-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-150 disabled:opacity-50 disabled:cursor-not-allowed">
                         <span wire:loading wire:target="createAndStay">
                             <svg class="animate-spin h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
                                 viewBox="0 0 24 24">
@@ -254,7 +255,7 @@ class extends Component {
                         <span wire:loading wire:target="createAndStay">Menyimpan...</span>
                     </button>
                     <button type="submit" wire:loading.attr="disabled" wire:target="createElection,createAndStay"
-                        class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 disabled:opacity-50 disabled:cursor-not-allowed">
+                        class="inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 disabled:opacity-50 disabled:cursor-not-allowed">
                         <span wire:loading wire:target="createElection">
                             <svg class="animate-spin h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
                                 viewBox="0 0 24 24">

@@ -71,15 +71,16 @@ class extends Component {
 ?>
 <x-slot name="headerAction">
     <a href="{{ route('elections.create') }}" wire:navigate
-        class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150">
-        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        class="inline-flex items-center justify-center px-3 sm:px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 whitespace-nowrap">
+        <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
         </svg>
-        Tambah Election
+        <span class="hidden sm:inline">Tambah Election</span>
+        <span class="sm:hidden">Tambah</span>
     </a>
 </x-slot>
 
-<div class="space-y-6">
+<div class="space-y-4 sm:space-y-6">
     @if ($showSuccess)
         <div wire:key="notification-{{ $notificationKey }}">
             <x-flash-notification :show="$showSuccess" :message="$successMessage" type="success" />
@@ -87,7 +88,7 @@ class extends Component {
     @endif
 
     <!-- Table Card -->
-    <div class="bg-white rounded-lg shadow">
+    <div class="bg-white rounded-lg shadow overflow-x-auto">
         <livewire:election-table />
     </div>
 

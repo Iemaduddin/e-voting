@@ -49,19 +49,22 @@ class extends Component {
     @endif
 
     <!-- Header -->
-    <div class="bg-white rounded-lg shadow p-6">
-        <div class="flex items-center justify-between">
-            <div>
-                <h2 class="text-2xl font-bold text-gray-900">{{ $election->name }}</h2>
-                <p class="mt-1 text-sm text-gray-500">{{ $election->organization->shorten_name ?? 'N/A' }}</p>
+    <div class="bg-white rounded-lg shadow p-4 sm:p-6">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div class="flex-1 min-w-0">
+                <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 truncate">
+                    {{ $election->name }}</h2>
+                <p class="mt-1 text-xs sm:text-sm text-gray-500">{{ $election->organization->shorten_name ?? 'N/A' }}
+                </p>
             </div>
             <a href="{{ route('elections.edit', ['id' => $election->id]) }}" wire:navigate
-                class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150">
+                class="inline-flex items-center justify-center px-3 sm:px-4 py-2 bg-blue-600 text-white text-xs sm:text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 whitespace-nowrap">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                 </svg>
-                Edit Pemilihan
+                <span class="hidden sm:inline">Edit Pemilihan</span>
+                <span class="sm:hidden">Edit</span>
             </a>
         </div>
     </div>

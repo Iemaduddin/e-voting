@@ -24,10 +24,12 @@
 
 <body class="font-sans antialiased overflow-x-hidden">
 <div x-data="{
-    sidebarOpen: localStorage.getItem('sidebarOpen') === 'false' ? false : true,
+    sidebarOpen: window.innerWidth >= 768 ? (localStorage.getItem('sidebarOpen') === 'false' ? false : true) : false,
     toggleSidebar() {
         this.sidebarOpen = !this.sidebarOpen;
-        localStorage.setItem('sidebarOpen', this.sidebarOpen);
+        if (window.innerWidth >= 768) {
+            localStorage.setItem('sidebarOpen', this.sidebarOpen);
+        }
     }
 }" class="min-h-screen bg-gray-100 flex overflow-x-hidden">
     <!-- Sidebar -->
@@ -45,17 +47,17 @@
             <div class="mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-full">
                 <!-- Page Header -->
                 @if (isset($pageTitle) || isset($pageDescription) || isset($headerAction))
-                    <div class="mb-6 flex justify-between items-center">
+                    <div class="mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
                         <div>
                             @if (isset($pageTitle))
-                                <h2 class="text-2xl font-bold text-gray-900">{{ $pageTitle }}</h2>
+                                <h2 class="text-xl sm:text-2xl font-bold text-gray-900">{{ $pageTitle }}</h2>
                             @endif
                             @if (isset($pageDescription))
                                 <p class="mt-1 text-sm text-gray-600">{{ $pageDescription }}</p>
                             @endif
                         </div>
                         @if (isset($headerAction))
-                            <div>
+                            <div class="w-full sm:w-auto">
                                 {{ $headerAction }}
                             </div>
                         @endif
