@@ -37,8 +37,8 @@ new #[Layout('layouts.vote', ['subtitle' => 'Pilih Kandidat'])] class extends Co
         $user = Auth::user();
         $mahasiswa = $user->mahasiswa;
 
-        // Check if user has role 'voter' dan aktif
-        if (!$user->hasRole('Voter') || !$user->is_active) {
+        // Check if user aktif
+        if (!$user->is_active) {
             notyf()->duration(4000)->position('x', 'right')->position('y', 'top')->addError('Anda tidak memiliki akses untuk voting.');
             return $this->redirect(route('vote.index'), navigate: true);
         }
@@ -252,7 +252,7 @@ new #[Layout('layouts.vote', ['subtitle' => 'Pilih Kandidat'])] class extends Co
         </div>
 
         <!-- Instruction -->
-        <div class="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-lg mb-8">
+        <div class="bg-blue-50 border border-blue-500 p-6 rounded-lg mb-8">
             <div class="flex items-start">
                 <svg class="w-6 h-6 text-blue-500 mr-3 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor"
                     viewBox="0 0 24 24">
@@ -491,18 +491,22 @@ new #[Layout('layouts.vote', ['subtitle' => 'Pilih Kandidat'])] class extends Co
                                         @endif
                                         <!-- Vote Button -->
                                         <button type="button" wire:click="selectCandidate('{{ $candidate->id }}')"
-                                            @disabled($hasVoted)
+                                            @disabled($hasVoted || !auth()->user()->hasRole('Voter'))
                                             class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white text-sm rounded-lg font-bold hover:bg-green-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed w-full md:w-auto">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                             </svg>
-                                            @if ($hasVoted)
-                                                SUDAH MEMILIH
+                                            @role('Voter')
+                                                @if ($hasVoted)
+                                                    SUDAH MEMILIH
+                                                @else
+                                                    PILIH KANDIDAT
+                                                @endif
                                             @else
-                                                PILIH KANDIDAT
-                                            @endif
+                                                Anda Tidak Berhak Memilih
+                                            @endrole
                                         </button>
                                     </div>
                                 </div>
@@ -512,20 +516,37 @@ new #[Layout('layouts.vote', ['subtitle' => 'Pilih Kandidat'])] class extends Co
                 </div>
 
                 <!-- Voting Status -->
-                <div
-                    class="mt-6 bg-yellow-50 border-2 border-yellow-300 rounded-xl p-5 flex items-start gap-4 shadow-sm">
-                    <svg class="w-6 h-6 text-yellow-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                    </svg>
-                    <div>
-                        <p class="font-bold text-yellow-900 text-base">Status: Belum Memilih</p>
-                        <p class="text-sm text-yellow-700 mt-1">Pilih salah satu kandidat di atas untuk memberikan
-                            suara
-                            Anda. Suara hanya dapat diberikan satu kali.</p>
+                @if ($hasVoted)
+                    <div
+                        class="mt-6 bg-green-50 border-2 border-green-300 rounded-xl p-5 flex items-start gap-4 shadow-sm">
+                        <svg class="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+
+                        </svg>
+                        <div>
+                            <p class="font-bold text-green-900 text-base">Status: Sudah Memilih</p>
+                            <p class="text-sm text-green-700 mt-1">Selamat suara Anda telah masuk. Terima kasih atas
+                                partisipasi Anda dalam pemilihan ini.</p>
+                        </div>
                     </div>
-                </div>
+                @else
+                    <div
+                        class="mt-6 bg-yellow-50 border-2 border-yellow-300 rounded-xl p-5 flex items-start gap-4 shadow-sm">
+                        <svg class="w-6 h-6 text-yellow-600 flex-shrink-0 mt-0.5" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        <div>
+                            <p class="font-bold text-yellow-900 text-base">Status: Belum Memilih</p>
+                            <p class="text-sm text-yellow-700 mt-1">Pilih salah satu kandidat di atas untuk memberikan
+                                suara
+                                Anda. Suara hanya dapat diberikan satu kali.</p>
+                        </div>
+                    </div>
+                @endif
             @else
                 <!-- Empty State -->
                 <div class="text-center py-12">

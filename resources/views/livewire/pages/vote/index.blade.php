@@ -16,8 +16,8 @@ new #[Layout('layouts.vote', ['subtitle' => 'Pemilihan'])] class extends Compone
     {
         $user = Auth::user();
 
-        // Cek apakah user punya role 'voter' dan aktif
-        if (!$user->hasRole('Voter') || !$user->is_active) {
+        // Cek apakah user aktif
+        if (!$user->is_active) {
             $this->activeElections = collect([]);
             $this->upcomingElections = collect([]);
             $this->pastElections = collect([]);
@@ -134,14 +134,14 @@ new #[Layout('layouts.vote', ['subtitle' => 'Pemilihan'])] class extends Compone
         </div>
 
         <!-- Content -->
-        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-16">
             <div class="text-center">
                 <div class="flex justify-center mb-6">
                     <img src="{{ asset('assets/image/id_logo.png') }}" alt="Logo"
                         class="w-24 h-24 object-contain drop-shadow-2xl">
                 </div>
-                <h1 class="text-4xl md:text-5xl font-bold mb-4">E-Voting System</h1>
-                <p class="text-xl text-indigo-100 max-w-2xl mx-auto">
+                <h1 class="text-2xl md:text-5xl font-bold mb-4">E-Voting System</h1>
+                <p class="text-base md:text-xl text-indigo-100 max-w-2xl mx-auto">
                     Partisipasi Anda sangat berarti! Gunakan hak suara Anda untuk masa depan yang lebih baik.
                 </p>
             </div>
@@ -154,7 +154,7 @@ new #[Layout('layouts.vote', ['subtitle' => 'Pemilihan'])] class extends Compone
             <div class="mb-12">
                 <div class="flex items-center mb-6">
                     <div class="flex-shrink-0">
-                        <div class="h-12 w-12 bg-green-500 rounded-full flex items-center justify-center">
+                        <div class="h-8 w-8 md:h-12 md:w-12 bg-green-500 rounded-full flex items-center justify-center">
                             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M5 13l4 4L19 7"></path>
@@ -162,8 +162,8 @@ new #[Layout('layouts.vote', ['subtitle' => 'Pemilihan'])] class extends Compone
                         </div>
                     </div>
                     <div class="ml-4">
-                        <h2 class="text-3xl font-bold text-gray-800">Pemilihan Aktif</h2>
-                        <p class="text-gray-600">Pilih kandidat favorit Anda sekarang!</p>
+                        <h2 class="text-xl md:text-3xl font-bold text-gray-800">Pemilihan Aktif</h2>
+                        <p class="text-sm md:text-base text-gray-600">Pilih kandidat favorit Anda sekarang!</p>
                     </div>
                 </div>
 
@@ -189,14 +189,14 @@ new #[Layout('layouts.vote', ['subtitle' => 'Pemilihan'])] class extends Compone
                                             $orgType === 'LT'
                                                 ? 'bg-blue-100 text-blue-700'
                                                 : ($orgType === 'HMJ'
-                                                    ? 'bg-purple-100 text-purple-700'
-                                                    : 'bg-amber-100 text-amber-700');
+                                                    ? 'bg-yellow-100 text-yellow-700'
+                                                    : 'bg-green-100 text-green-700');
                                         $badgeText =
                                             $orgType === 'LT'
                                                 ? 'Lembaga Tinggi'
                                                 : ($orgType === 'HMJ'
-                                                    ? 'Himpunan Jurusan'
-                                                    : 'Unit Kegiatan');
+                                                    ? 'Himpunan Mahasiswa Jurusan'
+                                                    : 'Unit Kegiatan Mahasiswa');
                                     @endphp
                                     <span class="{{ $badgeColor }} text-xs font-semibold px-2 py-1 rounded">
                                         {{ $badgeText }}
@@ -208,13 +208,15 @@ new #[Layout('layouts.vote', ['subtitle' => 'Pemilihan'])] class extends Compone
                                         </span>
                                     @endif
                                 </div>
-                                <h3 class="text-xl font-bold text-gray-800 mb-2">{{ $election->name }}</h3>
+                                <h3 class="text-base md:text-xl font-bold text-gray-800 mb-2">{{ $election->name }}</h3>
                                 @if ($election->organization)
-                                    <p class="text-sm text-gray-500 mb-3">{{ $election->organization->name }}</p>
+                                    <p class="text-xs md:text-sm text-gray-500 mb-3">
+                                        {{ $election->organization->user->name }}
+                                    </p>
                                 @endif
 
                                 <div class="space-y-2 mb-4">
-                                    <div class="flex items-center text-sm text-gray-600">
+                                    <div class="flex items-center text-xs md:text-sm text-gray-600">
                                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor"
                                             viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -223,7 +225,7 @@ new #[Layout('layouts.vote', ['subtitle' => 'Pemilihan'])] class extends Compone
                                         </svg>
                                         {{ $election->candidates->count() }} Kandidat
                                     </div>
-                                    <div class="flex items-center text-sm text-gray-600">
+                                    <div class="flex items-center text-xs md:text-sm text-gray-600">
                                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor"
                                             viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -235,13 +237,17 @@ new #[Layout('layouts.vote', ['subtitle' => 'Pemilihan'])] class extends Compone
 
                                 @if ($election->user_has_voted)
                                     <button disabled
-                                        class="w-full bg-gray-300 text-gray-600 font-semibold py-3 px-4 rounded-lg cursor-not-allowed">
+                                        class="w-full bg-gray-300 text-gray-600 font-semibold py-3 px-4 rounded-lg cursor-not-allowed text-sm md:text-base">
                                         Sudah Memilih
                                     </button>
                                 @else
                                     <a href="{{ route('vote.show', $election->id) }}" wire:navigate
-                                        class="block w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white text-center font-semibold py-3 px-4 rounded-lg transition duration-150 shadow-md hover:shadow-lg">
-                                        Pilih Sekarang
+                                        class="block w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-sm md:text-base text-white text-center font-semibold py-3 px-4 rounded-lg transition duration-150 shadow-md hover:shadow-lg">
+                                        @role('Voter')
+                                            Pilih Sekarang
+                                        @else
+                                            Lihat Pemilihan
+                                        @endrole
                                     </a>
                                 @endif
                             </div>
@@ -256,7 +262,7 @@ new #[Layout('layouts.vote', ['subtitle' => 'Pemilihan'])] class extends Compone
             <div class="mb-12">
                 <div class="flex items-center mb-6">
                     <div class="flex-shrink-0">
-                        <div class="h-12 w-12 bg-blue-500 rounded-full flex items-center justify-center">
+                        <div class="h-8 w-8 md:h-12 md:w-12 bg-blue-500 rounded-full flex items-center justify-center">
                             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
@@ -265,8 +271,9 @@ new #[Layout('layouts.vote', ['subtitle' => 'Pemilihan'])] class extends Compone
                         </div>
                     </div>
                     <div class="ml-4">
-                        <h2 class="text-3xl font-bold text-gray-800">Pemilihan Mendatang</h2>
-                        <p class="text-gray-600">Persiapkan diri Anda untuk pemilihan berikutnya</p>
+                        <h2 class="text-xl md:text-3xl font-bold text-gray-800">Pemilihan Mendatang</h2>
+                        <p class="text-sm md:text-base text-gray-600">Persiapkan diri Anda untuk pemilihan berikutnya
+                        </p>
                     </div>
                 </div>
 
@@ -291,14 +298,14 @@ new #[Layout('layouts.vote', ['subtitle' => 'Pemilihan'])] class extends Compone
                                             $orgType === 'LT'
                                                 ? 'bg-blue-100 text-blue-700'
                                                 : ($orgType === 'HMJ'
-                                                    ? 'bg-purple-100 text-purple-700'
-                                                    : 'bg-amber-100 text-amber-700');
+                                                    ? 'bg-yellow-100 text-yellow-700'
+                                                    : 'bg-green-100 text-green-700');
                                         $badgeText =
                                             $orgType === 'LT'
                                                 ? 'Lembaga Tinggi'
                                                 : ($orgType === 'HMJ'
-                                                    ? 'Himpunan Jurusan'
-                                                    : 'Unit Kegiatan');
+                                                    ? 'Himpunan Mahasiswa Jurusan'
+                                                    : 'Unit Kegiatan Mahasiswa');
                                     @endphp
                                     <span class="{{ $badgeColor }} text-xs font-semibold px-2 py-1 rounded">
                                         {{ $badgeText }}
@@ -307,18 +314,20 @@ new #[Layout('layouts.vote', ['subtitle' => 'Pemilihan'])] class extends Compone
                                         Akan Datang
                                     </span>
                                 </div>
-                                <h3 class="text-xl font-bold text-gray-800 mb-2">{{ $election->name }}</h3>
+                                <h3 class="text-base md:text-xl font-bold text-gray-800 mb-2">{{ $election->name }}
+                                </h3>
                                 @if ($election->organization)
-                                    <p class="text-sm text-gray-500 mb-3">{{ $election->organization->name }}</p>
+                                    <p class="text-xs md:text-sm text-gray-500 mb-3">
+                                        {{ $election->organization->user->name }}</p>
                                 @endif
 
                                 <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-                                    <p class="text-sm font-semibold text-blue-800 mb-1">Dimulai pada:</p>
-                                    <p class="text-lg font-bold text-blue-600">
+                                    <p class="text-xs md:text-sm font-semibold text-blue-800 mb-1">Dimulai pada:</p>
+                                    <p class="text-base md:text-lg font-bold text-blue-600">
                                         {{ $election->start_at->format('d M Y, H:i') }}</p>
                                 </div>
 
-                                <div class="flex items-center text-sm text-gray-600">
+                                <div class="flex items-center text-xs md:text-sm text-gray-600">
                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
@@ -338,7 +347,7 @@ new #[Layout('layouts.vote', ['subtitle' => 'Pemilihan'])] class extends Compone
             <div class="mb-12">
                 <div class="flex items-center mb-6">
                     <div class="flex-shrink-0">
-                        <div class="h-12 w-12 bg-gray-500 rounded-full flex items-center justify-center">
+                        <div class="h-8 w-8 md:h-12 md:w-12 bg-gray-500 rounded-full flex items-center justify-center">
                             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -347,8 +356,8 @@ new #[Layout('layouts.vote', ['subtitle' => 'Pemilihan'])] class extends Compone
                         </div>
                     </div>
                     <div class="ml-4">
-                        <h2 class="text-3xl font-bold text-gray-800">Riwayat Pemilihan</h2>
-                        <p class="text-gray-600">Lihat hasil pemilihan sebelumnya</p>
+                        <h2 class="text-xl md:text-3xl font-bold text-gray-800">Riwayat Pemilihan</h2>
+                        <p class="text-sm md:text-base text-gray-600">Lihat hasil pemilihan sebelumnya</p>
                     </div>
                 </div>
 
@@ -373,14 +382,14 @@ new #[Layout('layouts.vote', ['subtitle' => 'Pemilihan'])] class extends Compone
                                             $orgType === 'LT'
                                                 ? 'bg-blue-100 text-blue-700'
                                                 : ($orgType === 'HMJ'
-                                                    ? 'bg-purple-100 text-purple-700'
-                                                    : 'bg-amber-100 text-amber-700');
+                                                    ? 'bg-yellow-100 text-yellow-700'
+                                                    : 'bg-green-100 text-green-700');
                                         $badgeText =
                                             $orgType === 'LT'
                                                 ? 'Lembaga Tinggi'
                                                 : ($orgType === 'HMJ'
-                                                    ? 'Himpunan Jurusan'
-                                                    : 'Unit Kegiatan');
+                                                    ? 'Himpunan Mahasiswa Jurusan'
+                                                    : 'Unit Kegiatan Mahasiswa');
                                     @endphp
                                     <span class="{{ $badgeColor }} text-xs font-semibold px-2 py-1 rounded">
                                         {{ $badgeText }}
@@ -389,15 +398,18 @@ new #[Layout('layouts.vote', ['subtitle' => 'Pemilihan'])] class extends Compone
                                         Selesai
                                     </span>
                                 </div>
-                                <h3 class="text-xl font-bold text-gray-800 mb-2">{{ $election->name }}</h3>
+                                <h3 class="text-base md:text-xl font-bold text-gray-800 mb-2">{{ $election->name }}
+                                </h3>
                                 @if ($election->organization)
-                                    <p class="text-sm text-gray-500 mb-3">{{ $election->organization->name }}</p>
+                                    <p class="text-xs md:text-sm text-gray-500 mb-3">
+                                        {{ $election->organization->user->name }}</p>
                                 @endif
 
                                 @if ($election->user_vote)
                                     <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
-                                        <p class="text-sm font-semibold text-green-800 mb-2">Pilihan Anda:</p>
-                                        <p class="text-sm font-bold text-green-600">
+                                        <p class="text-sm md:text-base font-semibold text-green-800 mb-2">Pilihan Anda:
+                                        </p>
+                                        <p class="text-sm md:text-base font-bold text-green-600">
                                             {{ $election->user_vote->candidate->ketua->name }}
                                             @if ($election->user_vote->candidate->wakil)
                                                 & {{ $election->user_vote->candidate->wakil->name }}
@@ -406,12 +418,13 @@ new #[Layout('layouts.vote', ['subtitle' => 'Pemilihan'])] class extends Compone
                                     </div>
                                 @else
                                     <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-                                        <p class="text-sm text-yellow-800">Anda tidak berpartisipasi dalam pemilihan
+                                        <p class="text-sm md:text-base text-yellow-800">Anda tidak berpartisipasi dalam
+                                            pemilihan
                                             ini</p>
                                     </div>
                                 @endif
 
-                                <div class="text-sm text-gray-600">
+                                <div class="text-sm md:text-base text-gray-600">
                                     Berakhir: {{ $election->end_at->format('d M Y') }}
                                 </div>
                             </div>
