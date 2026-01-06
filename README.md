@@ -1,61 +1,221 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# E-Voting System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistem Pemilihan Elektronik berbasis web untuk organisasi kampus (BEM, DPM, HMJ, UKM) yang aman, modern, dan mudah digunakan.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Tampilan Website
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+-   **Login**  
+    ![Login](public/assets/image/docs/login.png)
+-   **Kelola Pemilihan**  
+    ![Kelola Pemilihan](public/assets/image/docs/election_manage.png)
+-   **Halaman Beranda Pemilih (Voter)**  
+    ![Halaman Beranda Pemilih (Voter)](public/assets/image/docs/home.png)
+-   **Halaman Pemilihan**  
+    ![Halaman Pemilihan](public/assets/image/docs/vote_page.png)
+-   **Hasil Pemilihan**  
+    ![Hasil Pemilihan](public/assets/image/docs/result_election.png)
+-   **Dashboard**  
+    ![Dashboard](public/assets/image/docs/dashboard.png)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## Daftar Isi
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+-   [Tentang Proyek](#-tentang-proyek)
+-   [Fitur Utama](#-fitur-utama)
+-   [Teknologi](#-teknologi)
+-   [Persyaratan Sistem](#-persyaratan-sistem)
+-   [Instalasi](#-instalasi)
+-   [Role & Permission](#-role--permission)
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Tentang Proyek
 
-## Laravel Sponsors
+**E-Voting System** adalah aplikasi web untuk mengelola pemilihan elektronik di lingkungan kampus. Sistem ini mendukung berbagai jenis organisasi dengan level akses yang berbeda:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+-   **LT (Lembaga Tingkat Institusi)**: BEM, DPM - Pemilihan untuk seluruh mahasiswa aktif
+-   **HMJ (Himpunan Mahasiswa Jurusan)**: Pemilihan khusus mahasiswa per jurusan
+-   **UKM (Unit Kegiatan Mahasiswa)**: Pemilihan khusus anggota UKM terdaftar
 
-### Premium Partners
+### Tujuan Utama
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+-   Mempermudah proses pemilihan secara digital
+-   Dapat digunakan oleh banyak organisasi (multi elections & scopes)
+-   Meningkatkan partisipasi mahasiswa dalam pemilihan organisasi
+-   Menjamin transparansi dan keamanan suara pemilih
+-   Mengurangi biaya dan waktu penyelenggaraan pemilihan
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Fitur Utama
 
-## Code of Conduct
+### Untuk Voter (Mahasiswa)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+-   **Halaman Beranda Pemilihan**: Lihat daftar pemilihan aktif, mendatang, dan yang akan datang
+-   **Sistem Voting**: Vote kandidat dengan konfirmasi dan enkripsi suara
+-   **Filter Otomatis**: Hanya menampilkan pemilihan yang sesuai (berdasarkan jurusan/keanggotaan)
+-   **Responsive Design**: Optimized untuk desktop, tablet, dan mobile
 
-## Security Vulnerabilities
+### Untuk Organization (Penyelenggara Pemilihan)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+-   **Kelola Pemilihan**: Create, edit, publish, dan archive pemilihan
+-   **Perpanjangan Waktu**: Extend waktu pemilihan dengan log riwayat
+-   **Kelola Kandidat**: Upload foto, CV, visi-misi, dan profil kandidat
+-   **Kelola Anggota**: Manage member organisasi
+-   **Dashboard Analytics**: Statistik real-time voter turnout dan hasil
 
-## License
+### Untuk Super Admin
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+-   **User Management**: Kelola seluruh user, role, dan permission
+-   **Master Data**: Kelola jurusan, prodi, dan organisasi
+-   **System Monitoring**: Pantau seluruh aktivitas sistem
+-   **Report Generation**: Laporan data pemilihan
+
+---
+
+## Teknologi
+
+-   **Laravel 12**
+-   **Livewire 3**
+-   **Livewire Volt**
+-   **Spatie Laravel Permission**
+-   **Laravel Breeze**
+-   **MySQL**
+-   **Tailwind CSS 3**:
+-   **Alpine.js**
+-   **Livewire PowerGrid** (Datatables)
+-   **Notyf** (Toast notifications)
+
+## Persyaratan Sistem
+
+-   PHP >= 8.2
+-   Composer >= 2.x
+-   Node.js >= 18.x & NPM
+-   Web Server (Apache/Nginx)
+
+---
+
+## Instalasi
+
+### 1. Clone Repository
+
+```bash
+git clone https://github.com/Iemaduddin/e-voting.git
+cd e-voting
+```
+
+### 2. Install Dependencies
+
+```bash
+# Install PHP dependencies
+composer install
+
+# Install Node.js dependencies
+npm install
+```
+
+### 3. Setup Environment
+
+```bash
+# Copy environment file
+cp .env.example .env
+
+# Generate application key
+php artisan key:generate
+```
+
+### 4. Konfigurasi Database
+
+Edit file `.env` dan sesuaikan konfigurasi database:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=e_voting
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+### 5. Migrasi & Seeder
+
+```bash
+# Run migrations
+php artisan migrate
+
+# Seed initial data (roles, users, jurusan, prodi, organizations)
+php artisan db:seed
+```
+
+### 6. Storage Link
+
+```bash
+php artisan storage:link
+```
+
+### 7. Build Assets
+
+```bash
+# Development
+npm run dev
+
+# Production
+npm run build
+```
+
+### 8. Jalankan Server
+
+```bash
+composer run dev
+```
+
+Akses aplikasi di `http://127.0.0.1:8000`
+
+---
+
+## Role & Permission
+
+### Roles
+
+1. **Super Admin**
+
+    - Full access ke seluruh sistem
+    - User management
+    - Master data management (jurusan, prodi)
+    - System monitoring
+
+2. **Organization**
+
+    - Kelola pemilihan organisasi sendiri
+    - Kelola kandidat
+    - Kelola member
+    - Lihat hasil pemilihan
+
+3. **Voter**
+    - Lihat pemilihan yang tersedia
+    - Vote kandidat (sekali per pemilihan)
+
+### Authorization Logic
+
+**Voter Access to Election:**
+
+-   **LT**: Semua mahasiswa aktif dengan role Voter
+-   **HMJ**: Mahasiswa aktif dengan jurusan_id sama dengan organization creator
+-   **UKM**: Mahasiswa aktif yang terdaftar di organization_members
+
+---
+
+## Developer
+
+Dikembangkan oleh **Iemaduddin**
+
+**Repository:** [https://github.com/Iemaduddin/e-voting](https://github.com/Iemaduddin/e-voting)
+
+---
+
+## Kontak & Support
+
+Jika ada pertanyaan atau masalah, silakan buka [Issue](https://github.com/Iemaduddin/e-voting/issues) di GitHub.
